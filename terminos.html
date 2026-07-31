@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Términos de Uso — Pixeo</title>
+  <meta name="description" content="Términos y condiciones de uso de Pixeo. Conoce las reglas y condiciones para usar nuestra plataforma de diseño online." />
+  <link rel="canonical" href="https://www.pixeo.com/terminos.html" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=2" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .legal-hero {
+      padding: calc(var(--nav-alto) + 4rem) 0 3rem;
+      background: linear-gradient(135deg, rgba(255,107,53,0.06) 0%, transparent 50%);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .legal-etiqueta {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem 1rem;
+      background: rgba(255,107,53,0.12);
+      border: 1px solid rgba(255,107,53,0.25);
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--primario);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .legal-titulo {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    .legal-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      color: var(--texto-suave);
+      font-size: .875rem;
+      margin-top: 1.5rem;
+    }
+
+    .legal-meta span {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .legal-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 3rem;
+      padding: 4rem 0;
+      align-items: start;
+    }
+
+    .legal-indice {
+      position: sticky;
+      top: calc(var(--nav-alto) + 1.5rem);
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio-lg);
+      padding: 1.5rem;
+    }
+
+    .legal-indice__titulo {
+      font-family: var(--fuente-titulo);
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--texto-suave);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1rem;
+    }
+
+    .legal-indice__enlace {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem .6rem;
+      border-radius: var(--radio-sm);
+      font-size: .8rem;
+      color: var(--texto-suave);
+      transition: all var(--transicion);
+      margin-bottom: .15rem;
+    }
+
+    .legal-indice__enlace:hover {
+      color: var(--primario);
+      background: rgba(255,107,53,0.08);
+    }
+
+    .legal-indice__num {
+      font-family: var(--fuente-titulo);
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--primario);
+      background: rgba(255,107,53,0.1);
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .legal-contenido {
+      max-width: 760px;
+    }
+
+    .legal-seccion {
+      margin-bottom: 3rem;
+      scroll-margin-top: calc(var(--nav-alto) + 1.5rem);
+    }
+
+    .legal-seccion__header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .legal-seccion__num {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primario), #ff9066);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fuente-titulo);
+      font-size: .85rem;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .legal-seccion__titulo {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .legal-contenido p {
+      color: var(--texto-suave);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      font-size: .9375rem;
+    }
+
+    .legal-contenido ul,
+    .legal-contenido ol {
+      margin: 1rem 0 1.25rem 1.25rem;
+    }
+
+    .legal-contenido li {
+      color: var(--texto-suave);
+      line-height: 1.75;
+      margin-bottom: .5rem;
+      font-size: .9375rem;
+    }
+
+    .legal-contenido li::marker {
+      color: var(--primario);
+    }
+
+    .legal-highlight {
+      background: rgba(247,201,72,0.06);
+      border: 1px solid rgba(247,201,72,0.15);
+      border-left: 3px solid var(--acento);
+      border-radius: 0 var(--radio-sm) var(--radio-sm) 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: .9rem;
+      color: var(--texto);
+      line-height: 1.7;
+    }
+
+    .legal-highlight strong { color: var(--acento); }
+
+    .legal-info-box {
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio);
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .legal-info-box__label {
+      font-family: var(--fuente-titulo);
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--primario);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: .75rem;
+    }
+
+    .legal-info-box p { margin-bottom: 0 !important; }
+
+    .legal-contacto-cta {
+      background: linear-gradient(135deg, rgba(255,107,53,0.08), rgba(247,201,72,0.04));
+      border: 1px solid rgba(255,107,53,0.15);
+      border-radius: var(--radio-lg);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .legal-contacto-cta h3 { font-size: 1.25rem; margin-bottom: .75rem; }
+    .legal-contacto-cta p  { color: var(--texto-suave); margin-bottom: 1.25rem; font-size: .9rem; }
+
+    @media (max-width: 768px) {
+      .legal-layout { grid-template-columns: 1fr; }
+      .legal-indice  { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<header class="navbar" role="banner">
+  <div class="contenedor navbar__inner">
+    <a href="index.html" class="navbar__logo" aria-label="Pixeo inicio">
+      <div class="navbar__logo-icono" aria-hidden="true">⚡</div>
+      Pixeo
+    </a>
+    <nav class="navbar__nav" aria-label="Navegación principal">
+      <a href="index.html"      class="navbar__enlace">Inicio</a>
+      <a href="app.html"        class="navbar__enlace">Editor</a>
+      <a href="blog/index.html" class="navbar__enlace">Blog</a>
+      <a href="contacto.html"   class="navbar__enlace">Contacto</a>
+    </nav>
+    <div class="navbar__acciones">
+      <div class="navbar__creditos" aria-label="Tus créditos">
+        ⚡ <span data-creditos>50</span> créditos
+      </div>
+      <a href="app.html" class="btn btn-primario btn-sm">Empezar gratis</a>
+    </div>
+    <button class="navbar__hamburguesa" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── HERO LEGAL ──────────────────────────────────────── -->
+  <section class="legal-hero">
+    <div class="contenedor">
+      <div class="legal-etiqueta">📋 Legal</div>
+      <h1 class="legal-titulo">Términos de Uso</h1>
+      <p style="color:var(--texto-suave);max-width:560px;line-height:1.7;font-size:.9375rem">
+        Al usar Pixeo aceptas estos términos. Léelos con calma — están escritos
+        en lenguaje claro para que entiendas exactamente qué puedes hacer y qué no.
+      </p>
+      <div class="legal-meta">
+        <span>📅 Última actualización: <strong style="color:var(--texto)">Mayo 2026</strong></span>
+        <span>📖 Tiempo de lectura: <strong style="color:var(--texto)">~5 minutos</strong></span>
+        <span>🌍 Aplica para: <strong style="color:var(--texto)">Todos los usuarios</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTENIDO ──────────────────────────────────────── -->
+  <div class="contenedor">
+    <div class="legal-layout">
+
+      <!-- Índice -->
+      <aside class="legal-indice" aria-label="Índice de contenido">
+        <div class="legal-indice__titulo">Contenido</div>
+        <a href="#aceptacion"      class="legal-indice__enlace"><span class="legal-indice__num">1</span> Aceptación</a>
+        <a href="#servicio"        class="legal-indice__enlace"><span class="legal-indice__num">2</span> El servicio</a>
+        <a href="#cuenta"          class="legal-indice__enlace"><span class="legal-indice__num">3</span> Tu cuenta</a>
+        <a href="#creditos"        class="legal-indice__enlace"><span class="legal-indice__num">4</span> Sistema de créditos</a>
+        <a href="#contenido"       class="legal-indice__enlace"><span class="legal-indice__num">5</span> Tu contenido</a>
+        <a href="#prohibiciones"   class="legal-indice__enlace"><span class="legal-indice__num">6</span> Usos prohibidos</a>
+        <a href="#propiedad"       class="legal-indice__enlace"><span class="legal-indice__num">7</span> Propiedad intelectual</a>
+        <a href="#responsabilidad" class="legal-indice__enlace"><span class="legal-indice__num">8</span> Responsabilidad</a>
+        <a href="#suspension"      class="legal-indice__enlace"><span class="legal-indice__num">9</span> Suspensión</a>
+        <a href="#cambios-tos"     class="legal-indice__enlace"><span class="legal-indice__num">10</span> Cambios</a>
+        <a href="#contacto-tos"    class="legal-indice__enlace"><span class="legal-indice__num">11</span> Contacto</a>
+      </aside>
+
+      <!-- Texto legal -->
+      <div class="legal-contenido">
+
+        <div class="legal-highlight">
+          <strong>Resumen simple:</strong> Pixeo es gratis para usar. Tus diseños son tuyos. No puedes usar la plataforma para actividades ilegales ni para dañar a otros. Los créditos son virtuales y no tienen valor monetario real salvo que se indique lo contrario.
+        </div>
+
+        <!-- 1 -->
+        <section class="legal-seccion" id="aceptacion">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">1</div>
+            <h2 class="legal-seccion__titulo">Aceptación de los términos</h2>
+          </div>
+          <p>
+            Al acceder o usar Pixeo (en adelante "la Plataforma"), aceptas estar sujeto a estos Términos de Uso y a nuestra <a href="privacidad.html" style="color:var(--primario)">Política de Privacidad</a>. Si no estás de acuerdo con alguno de estos términos, por favor no uses la Plataforma.
+          </p>
+          <p>
+            Estos términos constituyen un acuerdo legal entre tú y Pixeo. Nos reservamos el derecho de actualizar estos términos en cualquier momento, notificándote con antelación razonable.
+          </p>
+        </section>
+
+        <!-- 2 -->
+        <section class="legal-seccion" id="servicio">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">2</div>
+            <h2 class="legal-seccion__titulo">El servicio</h2>
+          </div>
+          <p>
+            Pixeo es una plataforma de diseño gráfico online que permite a los usuarios editar fotos, crear diseños, aplicar filtros, eliminar fondos y usar herramientas de inteligencia artificial, todo desde el navegador sin instalar nada.
+          </p>
+          <p>La Plataforma ofrece dos tipos de herramientas:</p>
+          <ul>
+            <li><strong style="color:var(--texto)">Herramientas gratuitas:</strong> accesibles para todos los usuarios sin coste alguno.</li>
+            <li><strong style="color:var(--texto)">Herramientas Pro:</strong> requieren créditos para ser utilizadas. Los créditos se ganan usando la plataforma o pueden adquirirse.</li>
+          </ul>
+          <p>
+            Nos esforzamos por mantener el servicio disponible 24/7, pero no garantizamos disponibilidad ininterrumpida. Podemos realizar mantenimientos programados con aviso previo.
+          </p>
+        </section>
+
+        <!-- 3 -->
+        <section class="legal-seccion" id="cuenta">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">3</div>
+            <h2 class="legal-seccion__titulo">Tu cuenta</h2>
+          </div>
+          <p>Para acceder a todas las funciones de Pixeo puedes crear una cuenta gratuita. Al hacerlo:</p>
+          <ul>
+            <li>Debes proporcionar información veraz y actualizada.</li>
+            <li>Eres responsable de mantener la confidencialidad de tu contraseña.</li>
+            <li>Eres responsable de todas las actividades que ocurran bajo tu cuenta.</li>
+            <li>Debes notificarnos inmediatamente si sospechas de un acceso no autorizado.</li>
+            <li>Debes tener al menos 13 años de edad para crear una cuenta.</li>
+          </ul>
+          <div class="legal-info-box">
+            <div class="legal-info-box__label">💡 Sin cuenta registrada</div>
+            <p>Puedes usar las herramientas básicas sin crear una cuenta. En ese caso, tus créditos y preferencias se guardan localmente en tu navegador.</p>
+          </div>
+        </section>
+
+        <!-- 4 -->
+        <section class="legal-seccion" id="creditos">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">4</div>
+            <h2 class="legal-seccion__titulo">Sistema de créditos</h2>
+          </div>
+          <p>Pixeo usa un sistema de créditos virtuales que funcionan así:</p>
+          <ul>
+            <li><strong style="color:var(--texto)">Créditos de bienvenida:</strong> recibes 50 créditos al registrarte o al visitar la plataforma por primera vez.</li>
+            <li><strong style="color:var(--texto)">Créditos por uso:</strong> ganas 1 crédito por cada minuto activo usando la plataforma.</li>
+            <li><strong style="color:var(--texto)">Créditos por diseño:</strong> ganas 5 créditos cada vez que guardas un diseño.</li>
+            <li><strong style="color:var(--texto)">Créditos por compartir:</strong> ganas 10 créditos al compartir en redes sociales.</li>
+            <li><strong style="color:var(--texto)">Créditos por referidos:</strong> ganas 25 créditos por cada amigo que invites.</li>
+          </ul>
+          <div class="legal-highlight">
+            <strong>Importante:</strong> Los créditos son virtuales y no tienen valor monetario real. No son canjeables por dinero ni transferibles entre cuentas, salvo que se indique explícitamente lo contrario en una promoción específica.
+          </div>
+          <p>
+            Nos reservamos el derecho de ajustar el valor de los créditos, las tasas de ganancia o el coste de las herramientas Pro con previo aviso de al menos 7 días.
+          </p>
+        </section>
+
+        <!-- 5 -->
+        <section class="legal-seccion" id="contenido">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">5</div>
+            <h2 class="legal-seccion__titulo">Tu contenido</h2>
+          </div>
+          <p>
+            <strong style="color:var(--texto)">Tus diseños son tuyos.</strong> Mantienes todos los derechos sobre las imágenes y diseños que crees usando Pixeo. No reclamamos ninguna propiedad sobre tu contenido.
+          </p>
+          <p>Al subir imágenes o crear contenido en Pixeo:</p>
+          <ul>
+            <li>Confirmas que tienes los derechos necesarios sobre ese contenido.</li>
+            <li>Nos otorgas una licencia limitada para procesar ese contenido únicamente con el fin de prestarte el servicio.</li>
+            <li>Esta licencia termina cuando eliminas el contenido o tu cuenta.</li>
+          </ul>
+          <p>
+            No debes subir contenido que infrinja derechos de autor, marcas registradas u otros derechos de terceros.
+          </p>
+        </section>
+
+        <!-- 6 -->
+        <section class="legal-seccion" id="prohibiciones">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">6</div>
+            <h2 class="legal-seccion__titulo">Usos prohibidos</h2>
+          </div>
+          <p>No está permitido usar Pixeo para:</p>
+          <ul>
+            <li>Crear contenido ilegal, difamatorio, obsceno o que incite al odio.</li>
+            <li>Infringir derechos de propiedad intelectual de terceros.</li>
+            <li>Usar bots, scrapers u otros medios automatizados para acceder al servicio.</li>
+            <li>Intentar acceder a áreas no autorizadas de la plataforma.</li>
+            <li>Manipular el sistema de créditos de forma fraudulenta.</li>
+            <li>Distribuir malware, virus u otro código malicioso.</li>
+            <li>Suplantar la identidad de otras personas o entidades.</li>
+            <li>Realizar actividades que perjudiquen el rendimiento del servicio para otros usuarios.</li>
+          </ul>
+          <p>
+            El incumplimiento de estas restricciones puede resultar en la suspensión inmediata de tu cuenta y, si procede, en acciones legales.
+          </p>
+        </section>
+
+        <!-- 7 -->
+        <section class="legal-seccion" id="propiedad">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">7</div>
+            <h2 class="legal-seccion__titulo">Propiedad intelectual</h2>
+          </div>
+          <p>
+            La Plataforma Pixeo, incluyendo su código, diseño, logotipos, textos, herramientas y plantillas propias, es propiedad de Pixeo y está protegida por las leyes de propiedad intelectual aplicables.
+          </p>
+          <p>
+            Las <strong style="color:var(--texto)">plantillas incluidas</strong> en la plataforma son de uso libre para crear diseños personales y comerciales. No puedes redistribuirlas como plantillas en bruto ni venderlas como tuyas.
+          </p>
+          <p>
+            El nombre "Pixeo", el logotipo y las marcas relacionadas son marcas registradas. No puedes usarlos sin permiso escrito previo.
+          </p>
+        </section>
+
+        <!-- 8 -->
+        <section class="legal-seccion" id="responsabilidad">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">8</div>
+            <h2 class="legal-seccion__titulo">Limitación de responsabilidad</h2>
+          </div>
+          <p>
+            Pixeo se proporciona "tal cual" y "según disponibilidad". En la medida permitida por la ley, no somos responsables de:
+          </p>
+          <ul>
+            <li>Pérdida de datos o diseños almacenados localmente.</li>
+            <li>Interrupciones del servicio por causas fuera de nuestro control.</li>
+            <li>Daños indirectos, incidentales o consecuentes derivados del uso o imposibilidad de uso del servicio.</li>
+            <li>El contenido de sitios web de terceros vinculados desde la Plataforma.</li>
+          </ul>
+          <div class="legal-info-box">
+            <div class="legal-info-box__label">💾 Consejo sobre tus diseños</div>
+            <p>Te recomendamos exportar y guardar copias de tus diseños en tu dispositivo. Los datos guardados en el navegador (localStorage) pueden perderse si limpias el caché.</p>
+          </div>
+        </section>
+
+        <!-- 9 -->
+        <section class="legal-seccion" id="suspension">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">9</div>
+            <h2 class="legal-seccion__titulo">Suspensión y cancelación</h2>
+          </div>
+          <p>
+            Podemos suspender o cancelar tu acceso a Pixeo si:
+          </p>
+          <ul>
+            <li>Incumples estos Términos de Uso.</li>
+            <li>Realizas actividades fraudulentas o dañinas.</li>
+            <li>No usas la cuenta durante un período prolongado (más de 12 meses).</li>
+          </ul>
+          <p>
+            En caso de cancelación por incumplimiento, perderás los créditos acumulados. Si la cancelación es por cierre del servicio, te notificaremos con al menos 30 días de antelación.
+          </p>
+          <p>
+            Puedes cancelar tu cuenta en cualquier momento contactándonos en <a href="mailto:hola@pixeo.com" style="color:var(--primario)">hola@pixeo.com</a>.
+          </p>
+        </section>
+
+        <!-- 10 -->
+        <section class="legal-seccion" id="cambios-tos">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">10</div>
+            <h2 class="legal-seccion__titulo">Cambios en los términos</h2>
+          </div>
+          <p>
+            Podemos actualizar estos Términos de Uso. Te notificaremos los cambios importantes mediante un aviso en la plataforma o por correo electrónico. El uso continuado del servicio tras la notificación implica aceptación de los nuevos términos.
+          </p>
+          <p>
+            Si no estás de acuerdo con los cambios, puedes dejar de usar el servicio antes de que entren en vigor.
+          </p>
+        </section>
+
+        <!-- 11 -->
+        <section class="legal-seccion" id="contacto-tos">
+          <div class="legal-seccion__header">
+            <div class="legal-seccion__num">11</div>
+            <h2 class="legal-seccion__titulo">Contacto</h2>
+          </div>
+          <p>Si tienes preguntas sobre estos Términos de Uso:</p>
+          <div class="legal-info-box">
+            <div class="legal-info-box__label">📬 Datos de contacto</div>
+            <p><strong style="color:var(--texto)">Correo general:</strong> <a href="mailto:hola@pixeo.com" style="color:var(--primario)">hola@pixeo.com</a></p>
+            <p style="margin-top:.5rem"><strong style="color:var(--texto)">Soporte:</strong> <a href="mailto:soporte@pixeo.com" style="color:var(--primario)">soporte@pixeo.com</a></p>
+            <p style="margin-top:.5rem"><strong style="color:var(--texto)">Sitio web:</strong> <a href="https://www.pixeo.com" style="color:var(--primario)">www.pixeo.com</a></p>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="legal-contacto-cta">
+          <h3>¿Tienes alguna duda?</h3>
+          <p>Nuestro equipo está disponible para aclarar cualquier aspecto de estos términos.</p>
+          <a href="contacto.html" class="btn btn-primario">Contáctanos →</a>
+        </div>
+
+      </div><!-- /legal-contenido -->
+    </div><!-- /legal-layout -->
+  </div><!-- /contenedor -->
+
+</main>
+
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="contenedor">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__marca">Pixeo</div>
+        <p class="footer__descripcion">La plataforma de diseño online donde tu creatividad tiene valor.</p>
+        <div class="footer__redes">
+          <a href="https://www.instagram.com/art_philip_studio/" class="footer__red" aria-label="Instagram" target="_blank" rel="noopener" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@artphilipstudio" class="footer__red" aria-label="TikTok" target="_blank" rel="noopener" title="TikTok">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@ArtPhilipStudio" class="footer__red" aria-label="YouTube" target="_blank" rel="noopener" title="YouTube">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.96-1.96C18.88 4 12 4 12 4s-6.88 0-8.58.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.96 1.96C5.12 20 12 20 12 20s6.88 0 8.58-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#181E38"/></svg>
+          </a>
+          <a href="https://wa.me/593968352133" class="footer__red" aria-label="WhatsApp" target="_blank" rel="noopener" title="WhatsApp">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/fernando-tello-dev/" class="footer__red" aria-label="LinkedIn" target="_blank" rel="noopener" title="LinkedIn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" class="footer__red" aria-label="Discord" title="Discord — próximamente" style="opacity:0.5;cursor:default">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-titulo">Herramientas</div>
+        <a href="app.html"                 class="footer__enlace">Editor de fotos</a>
+        <a href="app.html?tab=bg-remove"   class="footer__enlace">Eliminar fondo</a>
+        <a href="app.html?tab=ai-enhance"  class="footer__enlace">Mejorar con IA</a>
+        <a href="app.html?tab=templates"   class="footer__enlace">Plantillas</a>
+      </div>
+      <div>
+        <div class="footer__col-titulo">Empresa</div>
+        <a href="blog/index.html"          class="footer__enlace">Blog</a>
+        <a href="contacto.html"            class="footer__enlace">Contacto</a>
+        <a href="#como-funciona"           class="footer__enlace">Cómo funciona</a>
+      </div>
+      <div>
+        <div class="footer__col-titulo">Legal</div>
+        <a href="privacidad.html"          class="footer__enlace">Privacidad</a>
+        <a href="terminos.html"            class="footer__enlace">Términos de uso</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__copy">© <span id="anio"></span> Pixeo · Art Philip Studio · Quito, EC</div>
+      <div class="footer__legales">
+        <a href="privacidad.html" class="footer__legal">Privacidad</a>
+        <a href="terminos.html"   class="footer__legal">Términos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="assets/js/config-sitio.js"></script>
+<script src="assets/js/main.js"></script>
+<script>document.getElementById('anio').textContent = new Date().getFullYear();</script>
+
+</body>
+</html>

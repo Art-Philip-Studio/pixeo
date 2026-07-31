@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comunidad — Pixeo</title>
+  <meta name="description" content="Explora diseños creados por la comunidad Pixeo. Usa plantillas gratis y gana créditos publicando los tuyos." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* ── Comunidad específico ──────────────────────────────── */
+    .com-hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,53,.15) 0%, transparent 70%);
+    }
+    .com-hero__badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(247,201,72,.12); border: 1px solid rgba(247,201,72,.3);
+      color: var(--acento); border-radius: 50px; padding: 4px 14px;
+      font-size: .8rem; font-weight: 600; margin-bottom: 1rem;
+    }
+    .com-hero h1 {
+      font-family: var(--fuente-titulo); font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800; color: var(--texto); margin-bottom: .75rem; line-height: 1.15;
+    }
+    .com-hero h1 span { color: var(--primario); }
+    .com-hero p { color: var(--texto-suave); font-size: 1.05rem; max-width: 540px; margin: 0 auto 2rem; }
+    .com-hero__acciones { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Filtros ──────────────────────────────────────────── */
+    .com-filtros {
+      display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap;
+      padding: 0 1.5rem 2rem;
+    }
+    .com-filtro {
+      background: var(--superficie); border: 1px solid var(--borde);
+      color: var(--texto-suave); padding: 6px 16px; border-radius: 50px;
+      cursor: pointer; font-size: .85rem; transition: all .2s;
+    }
+    .com-filtro:hover { border-color: var(--primario); color: var(--texto); }
+    .com-filtro.activo { background: var(--primario); border-color: var(--primario); color: #fff; font-weight: 600; }
+
+    /* ── Stats bar ───────────────────────────────────────── */
+    .com-stats {
+      display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+      padding: 1rem 1.5rem 2.5rem; border-bottom: 1px solid var(--borde);
+      margin-bottom: 2.5rem;
+    }
+    .com-stat { text-align: center; }
+    .com-stat__num { font-family: var(--fuente-titulo); font-size: 1.8rem; font-weight: 800; color: var(--primario); }
+    .com-stat__lbl { font-size: .78rem; color: var(--texto-suave); margin-top: 2px; }
+
+    /* ── Grid ────────────────────────────────────────────── */
+    .com-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.5rem;
+      padding: 0 5% 6rem;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+    .com-card {
+      background: var(--superficie); border: 1px solid var(--borde);
+      border-radius: var(--radio); overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .com-card:hover { transform: translateY(-5px); box-shadow: var(--sombra-naranja); }
+    .com-card__img {
+      width: 100%; height: 190px; object-fit: cover;
+      background: var(--superficie2); display: block;
+    }
+    .com-card__placeholder {
+      width: 100%; height: 190px; background: var(--superficie2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+    }
+    .com-card__body { padding: 1rem 1.1rem; }
+    .com-card__autor {
+      display: flex; align-items: center; gap: 8px; margin-bottom: .6rem;
+    }
+    .com-card__avatar {
+      width: 26px; height: 26px; border-radius: 50%; object-fit: cover;
+      background: var(--primario); border: 2px solid var(--borde);
+      font-size: .7rem; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; flex-shrink: 0;
+    }
+    .com-card__autor-nombre { font-size: .82rem; color: var(--texto-suave); }
+    .com-card__titulo { font-weight: 700; font-size: .95rem; margin-bottom: .25rem; color: var(--texto); }
+    .com-card__cat {
+      font-size: .72rem; color: var(--primario); background: rgba(255,107,53,.1);
+      border-radius: 4px; padding: 2px 7px; display: inline-block; margin-bottom: .75rem;
+    }
+    .com-card__footer {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .com-card__usos { font-size: .78rem; color: var(--texto-suave); }
+    .com-card__usar {
+      background: var(--primario); color: #fff; border: none; border-radius: 7px;
+      padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .com-card__usar:hover { opacity: .85; }
+
+    /* ── Empty / Loading ─────────────────────────────────── */
+    .com-empty {
+      grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;
+      color: var(--texto-suave);
+    }
+    .com-empty__ico { font-size: 3.5rem; margin-bottom: 1rem; }
+    .com-empty h3 { font-size: 1.2rem; color: var(--texto); margin-bottom: .5rem; }
+
+    /* ── Botón flotante ──────────────────────────────────── */
+    .com-fab {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      background: var(--primario); color: #fff;
+      padding: 14px 22px; border-radius: 50px; border: none;
+      font-weight: 700; font-size: .95rem; cursor: pointer;
+      box-shadow: var(--sombra-naranja); transition: transform .2s;
+      display: flex; align-items: center; gap: 8px; z-index: 200;
+    }
+    .com-fab:hover { transform: scale(1.05); }
+
+    /* ── Loader skeleton ─────────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--superficie) 25%, var(--superficie2) 50%, var(--superficie) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: var(--radio);
+      height: 320px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    @media (max-width: 600px) {
+      .com-grid { padding: 0 1rem 5rem; }
+      .com-hero { padding: 4rem 1rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ────────────────────────────────────────────────── -->
+<header class="navbar" id="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="navbar__logo" aria-label="Pixeo inicio">
+      <img src="assets/img/logo.png?v=2" alt="Pixeo" style="width:34px;height:34px;border-radius:9px;object-fit:cover;flex-shrink:0;">
+      Pixeo
+    </a>
+    <nav class="navbar__nav" aria-label="Navegación principal">
+      <a href="index.html"      class="navbar__enlace">Inicio</a>
+      <a href="app.html"        class="navbar__enlace">Editor</a>
+      <a href="comunidad.html"  class="navbar__enlace activo">Comunidad</a>
+      <a href="blog/index.html" class="navbar__enlace">Blog</a>
+      <a href="contacto.html"   class="navbar__enlace">Contacto</a>
+    </nav>
+    <div class="navbar__acciones">
+      <div class="navbar__creditos" aria-label="Tus créditos">
+        ⭐ <span data-creditos>0</span>
+      </div>
+      <button data-pf-login onclick="window.pixeoLogin()" class="btn btn-outline btn-sm">Entrar</button>
+      <a href="app.html" data-pf-login class="btn btn-primario btn-sm">Empezar gratis</a>
+      <div data-pf-user style="display:none;align-items:center;gap:8px;">
+        <img data-pf-avatar src="" alt="avatar" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid var(--primario);">
+        <span data-pf-nombre style="font-size:13px;font-weight:600;color:var(--texto);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+        <a href="app.html" class="btn btn-primario btn-sm">Editor</a>
+        <button onclick="window.pixeoLogout()" style="background:none;border:1px solid #444;color:#aaa;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">Salir</button>
+      </div>
+    </div>
+    <button class="navbar__hamburguesa" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── HERO ──────────────────────────────────────────────────── -->
+<section class="com-hero">
+  <div class="com-hero__badge">🔥 Tendencias + Comunidad</div>
+  <h1>Lo que está viral<br><span>esta semana en Pixeo</span></h1>
+  <p>Descubre los estilos de IA más usados esta semana, pruébalos con tu foto y publica tus creaciones para ganar <strong>+50 créditos</strong>.</p>
+  <div class="com-hero__acciones">
+    <button class="btn btn-primario" onclick="window.abrirSubirDiseño && window.abrirSubirDiseño()">
+      🌟 Publicar mi diseño +50 ⭐
+    </button>
+    <a href="app.html" class="btn btn-outline">Ir al editor →</a>
+  </div>
+</section>
+
+
+<!-- ── VIRAL ESTA SEMANA ─────────────────────────────────────── -->
+<section class="viral-semana" id="viral-semana" aria-labelledby="viral-titulo">
+  <div class="viral-header">
+    <div class="viral-header__left">
+      <span class="viral-badge">🔥 Tendencias</span>
+      <h2 id="viral-titulo" class="viral-titulo">Estilos <span>virales esta semana</span></h2>
+      <p class="viral-subtitulo">Estos estilos de IA están arrasando. Haz clic en cualquiera para intentarlo con tu foto ahora mismo.</p>
+    </div>
+    <div class="viral-header__right">
+      <span class="viral-actualizado">🕐 Actualizado hace 2 horas</span>
+    </div>
+  </div>
+
+  <div class="viral-grid">
+
+    <!-- Card 1: Anime -->
+    <a href="app.html?prompt=anime+portrait+style+vibrant+colors+detailed+illustration&tab=ai-style" class="viral-card viral-card--hot" aria-label="Probar estilo Anime Cinemático">
+      <div class="viral-card__visual" style="background: linear-gradient(135deg, #1a0533 0%, #6b1fa3 40%, #ff6ec7 80%, #ffb347 100%);">
+        <div class="viral-card__preview-art">
+          <div class="vc-blob vc-blob--1"></div>
+          <div class="vc-blob vc-blob--2"></div>
+          <div class="vc-face vc-face--anime">
+            <div class="vc-eye"></div><div class="vc-eye"></div>
+          </div>
+          <div class="vc-sparkles">✦ ✧ ✦</div>
+        </div>
+        <span class="viral-card__rank">#1</span>
+        <span class="viral-card__hot-badge">🔥 HOT</span>
+      </div>
+      <div class="viral-card__info">
+        <div class="viral-card__tag" style="--tag-color:#b668ff;">Anime</div>
+        <div class="viral-card__nombre">Anime Cinemático</div>
+        <div class="viral-card__meta">
+          <span class="viral-card__usos">👁 42.3K intentos</span>
+          <span class="viral-card__delta viral-card__delta--up">↑ 280%</span>
+        </div>
+        <div class="viral-card__bar">
+          <div class="viral-card__bar-fill" style="width:94%;background:linear-gradient(90deg,#b668ff,#ff6ec7);"></div>
+        </div>
+        <button class="viral-card__cta">Intentarlo gratis →</button>
+      </div>
+    </a>
+
+    <!-- Card 2: Neon Cyberpunk -->
+    <a href="app.html?prompt=cyberpunk+neon+portrait+dark+city+glowing+lights&tab=ai-style" class="viral-card" aria-label="Probar estilo Neon Cyberpunk">
+      <div class="viral-card__visual" style="background: linear-gradient(135deg, #0a0a1a 0%, #001a3a 40%, #00d4ff 80%, #ff0080 100%);">
+        <div class="viral-card__preview-art">
+          <div class="vc-neon-grid"></div>
+          <div class="vc-neon-lines"></div>
+          <div class="vc-face vc-face--cyber">
+            <div class="vc-cyber-eye"></div><div class="vc-cyber-eye"></div>
+          </div>
+        </div>
+        <span class="viral-card__rank">#2</span>
+      </div>
+      <div class="viral-card__info">
+        <div class="viral-card__tag" style="--tag-color:#00d4ff;">Cyberpunk</div>
+        <div class="viral-card__nombre">Neon Cyberpunk</div>
+        <div class="viral-card__meta">
+          <span class="viral-card__usos">👁 31.8K intentos</span>
+          <span class="viral-card__delta viral-card__delta--up">↑ 195%</span>
+        </div>
+        <div class="viral-card__bar">
+          <div class="viral-card__bar-fill" style="width:78%;background:linear-gradient(90deg,#00d4ff,#ff0080);"></div>
+        </div>
+        <button class="viral-card__cta">Intentarlo gratis →</button>
+      </div>
+    </a>
+
+    <!-- Card 3: Studio Ghibli -->
+    <a href="app.html?prompt=studio+ghibli+watercolor+soft+painterly+style+dreamy&tab=ai-style" class="viral-card" aria-label="Probar estilo Ghibli Acuarela">
+      <div class="viral-card__visual" style="background: linear-gradient(135deg, #e8f5e9 0%, #a5d6a7 40%, #66bb6a 70%, #2e7d32 100%);">
+        <div class="viral-card__preview-art">
+          <div class="vc-watercolor"></div>
+          <div class="vc-clouds">☁ ☁</div>
+          <div class="vc-face vc-face--ghibli">
+            <div class="vc-dot-eye"></div><div class="vc-dot-eye"></div>
+          </div>
+        </div>
+        <span class="viral-card__rank">#3</span>
+      </div>
+      <div class="viral-card__info">
+        <div class="viral-card__tag" style="--tag-color:#66bb6a;">Acuarela</div>
+        <div class="viral-card__nombre">Ghibli Acuarela</div>
+        <div class="viral-card__meta">
+          <span class="viral-card__usos">👁 28.1K intentos</span>
+          <span class="viral-card__delta viral-card__delta--up">↑ 142%</span>
+        </div>
+        <div class="viral-card__bar">
+          <div class="viral-card__bar-fill" style="width:70%;background:linear-gradient(90deg,#66bb6a,#f9a825);"></div>
+        </div>
+        <button class="viral-card__cta">Intentarlo gratis →</button>
+      </div>
+    </a>
+
+    <!-- Card 4: Retro 80s -->
+    <a href="app.html?prompt=retro+80s+synthwave+neon+sunset+vaporwave+aesthetic&tab=ai-style" class="viral-card" aria-label="Probar estilo Retro 80s Synthwave">
+      <div class="viral-card__visual" style="background: linear-gradient(180deg, #0d0221 0%, #370617 40%, #ff6b35 70%, #f7c948 100%);">
+        <div class="viral-card__preview-art">
+          <div class="vc-grid-lines"></div>
+          <div class="vc-sun-retro"></div>
+        </div>
+        <span class="viral-card__rank">#4</span>
+        <span class="viral-card__nuevo-badge">✨ Nuevo</span>
+      </div>
+      <div class="viral-card__info">
+        <div class="viral-card__tag" style="--tag-color:#ff6b35;">Retro</div>
+        <div class="viral-card__nombre">Synthwave 80s</div>
+        <div class="viral-card__meta">
+          <span class="viral-card__usos">👁 19.4K intentos</span>
+          <span class="viral-card__delta viral-card__delta--up">↑ 310%</span>
+        </div>
+        <div class="viral-card__bar">
+          <div class="viral-card__bar-fill" style="width:55%;background:linear-gradient(90deg,#ff6b35,#f7c948);"></div>
+        </div>
+        <button class="viral-card__cta">Intentarlo gratis →</button>
+      </div>
+    </a>
+
+    <!-- Card 5: Pixar -->
+    <a href="app.html?prompt=pixar+3d+animation+style+cute+character+render&tab=ai-style" class="viral-card" aria-label="Probar estilo Pixar 3D">
+      <div class="viral-card__visual" style="background: linear-gradient(135deg, #1565c0 0%, #42a5f5 50%, #e3f2fd 100%);">
+        <div class="viral-card__preview-art">
+          <div class="vc-face vc-face--pixar">
+            <div class="vc-round-eye"></div><div class="vc-round-eye"></div>
+            <div class="vc-smile"></div>
+          </div>
+        </div>
+        <span class="viral-card__rank">#5</span>
+      </div>
+      <div class="viral-card__info">
+        <div class="viral-card__tag" style="--tag-color:#42a5f5;">3D</div>
+        <div class="viral-card__nombre">Pixar 3D</div>
+        <div class="viral-card__meta">
+          <span class="viral-card__usos">👁 16.7K intentos</span>
+          <span class="viral-card__delta viral-card__delta--up">↑ 88%</span>
+        </div>
+        <div class="viral-card__bar">
+          <div class="viral-card__bar-fill" style="width:47%;background:linear-gradient(90deg,#42a5f5,#7c4dff);"></div>
+        </div>
+        <button class="viral-card__cta">Intentarlo gratis →</button>
+      </div>
+    </a>
+
+    <!-- Card 6: Dark Academia -->
+    <a href="app.html?prompt=dark+academia+aesthetic+moody+portrait+vintage+sepia&tab=ai-style" class="viral-card" aria-label="Probar estilo Dark Academia">
+      <div class="viral-card__visual" style="background: linear-gradient(135deg, #1a0a00 0%, #4e342e 50%, #8d6e63 100%);">
+        <div class="viral-card__preview-art">
+          <div class="vc-sepia-overlay"></div>
+          <div class="vc-book-icon">📚</div>
+        </div>
+        <span class="viral-card__rank">#6</span>
+      </div>
+      <div class="viral-card__info">
+        <div class="viral-card__tag" style="--tag-color:#8d6e63;">Vintage</div>
+        <div class="viral-card__nombre">Dark Academia</div>
+        <div class="viral-card__meta">
+          <span class="viral-card__usos">👁 12.9K intentos</span>
+          <span class="viral-card__delta viral-card__delta--stable">→ estable</span>
+        </div>
+        <div class="viral-card__bar">
+          <div class="viral-card__bar-fill" style="width:38%;background:linear-gradient(90deg,#8d6e63,#ff6b35);"></div>
+        </div>
+        <button class="viral-card__cta">Intentarlo gratis →</button>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="viral-cta-row">
+    <span class="viral-cta-text">¿Quieres ver cómo queda con tu foto?</span>
+    <a href="app.html" class="btn btn-primario">Empezar gratis — 0 créditos →</a>
+  </div>
+</section>
+
+<style>
+  /* ── Viral semana ─────────────────────────────────────────── */
+  .viral-semana {
+    max-width: 1300px; margin: 0 auto;
+    padding: 3.5rem 5% 1rem;
+    border-bottom: 1px solid var(--borde);
+    margin-bottom: 3rem;
+  }
+  .viral-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem;
+  }
+  .viral-badge {
+    display: inline-block;
+    background: rgba(255,107,53,.12); border: 1px solid rgba(255,107,53,.3);
+    color: var(--primario); border-radius: 50px; padding: 4px 14px;
+    font-size: .8rem; font-weight: 700; margin-bottom: .6rem;
+    letter-spacing: .03em;
+  }
+  .viral-titulo {
+    font-family: var(--fuente-titulo); font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 800; color: var(--texto); line-height: 1.15; margin-bottom: .5rem;
+  }
+  .viral-titulo span { color: var(--primario); }
+  .viral-subtitulo { color: var(--texto-suave); font-size: .9rem; max-width: 500px; }
+  .viral-actualizado {
+    font-size: .75rem; color: var(--texto-suave);
+    background: var(--superficie); border: 1px solid var(--borde);
+    padding: 5px 12px; border-radius: 50px; white-space: nowrap;
+  }
+
+  /* ── Viral grid ───────────────────────────────────────────── */
+  .viral-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.25rem;
+  }
+  .viral-card {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 14px; overflow: hidden;
+    text-decoration: none; display: flex; flex-direction: column;
+    transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s, border-color .22s;
+    cursor: pointer; position: relative;
+  }
+  .viral-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(255,107,53,.2);
+    border-color: rgba(255,107,53,.4);
+  }
+  .viral-card--hot {
+    border-color: rgba(255,107,53,.35);
+    box-shadow: 0 4px 20px rgba(255,107,53,.12);
+  }
+  .viral-card__visual {
+    height: 150px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .viral-card__preview-art {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem;
+  }
+  .viral-card__rank {
+    position: absolute; top: 8px; left: 10px;
+    font-family: var(--fuente-titulo); font-size: .85rem; font-weight: 800;
+    color: rgba(255,255,255,.9);
+    background: rgba(0,0,0,.35); padding: 2px 8px; border-radius: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .viral-card__hot-badge {
+    position: absolute; top: 8px; right: 10px;
+    background: linear-gradient(135deg,#ff6b35,#f7c948);
+    color: #fff; font-size: .68rem; font-weight: 800;
+    padding: 2px 8px; border-radius: 20px;
+    animation: hotPulse 2s ease-in-out infinite;
+  }
+  @keyframes hotPulse { 0%,100%{opacity:1;} 50%{opacity:.7;} }
+  .viral-card__nuevo-badge {
+    position: absolute; top: 8px; right: 10px;
+    background: rgba(255,255,255,.15); backdrop-filter: blur(4px);
+    color: #fff; font-size: .68rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,.2);
+  }
+  .viral-card__info { padding: .9rem 1rem 1rem; flex: 1; display: flex; flex-direction: column; gap: .35rem; }
+  .viral-card__tag {
+    font-size: .65rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--tag-color, var(--primario));
+    background: color-mix(in srgb, var(--tag-color, var(--primario)) 12%, transparent);
+    border-radius: 4px; padding: 2px 7px; display: inline-block; width: fit-content;
+  }
+  .viral-card__nombre {
+    font-weight: 800; font-size: .92rem; color: var(--texto); font-family: var(--fuente-titulo);
+  }
+  .viral-card__meta { display: flex; align-items: center; justify-content: space-between; gap: .3rem; }
+  .viral-card__usos { font-size: .73rem; color: var(--texto-suave); }
+  .viral-card__delta { font-size: .7rem; font-weight: 700; border-radius: 4px; padding: 1px 5px; }
+  .viral-card__delta--up { color: #4caf50; background: rgba(76,175,80,.12); }
+  .viral-card__delta--stable { color: var(--texto-suave); background: var(--superficie2); }
+  .viral-card__bar {
+    height: 3px; background: rgba(255,255,255,.08);
+    border-radius: 99px; overflow: hidden; margin-top: .1rem;
+  }
+  .viral-card__bar-fill { height: 100%; border-radius: 99px; transition: width .8s ease; }
+  .viral-card__cta {
+    margin-top: .4rem;
+    background: transparent; border: 1px solid rgba(255,107,53,.3);
+    color: var(--primario); border-radius: 7px;
+    padding: .45rem .8rem; font-size: .78rem; font-weight: 700;
+    cursor: pointer; transition: all .18s; text-align: center;
+    font-family: inherit;
+  }
+  .viral-card:hover .viral-card__cta {
+    background: var(--primario); color: #fff; border-color: var(--primario);
+  }
+
+  /* ── Mini ilustraciones CSS ───────────────────────────────── */
+  .vc-blob--1 {
+    position: absolute; width: 80px; height: 80px;
+    background: radial-gradient(circle, rgba(255,110,199,.6), transparent 70%);
+    top: 10px; left: 20px; border-radius: 50%;
+  }
+  .vc-blob--2 {
+    position: absolute; width: 60px; height: 60px;
+    background: radial-gradient(circle, rgba(182,104,255,.5), transparent 70%);
+    bottom: 15px; right: 15px; border-radius: 50%;
+  }
+  .vc-face {
+    position: absolute; display: flex; flex-direction: column;
+    align-items: center; gap: 6px; bottom: 20px;
+  }
+  .vc-face--anime { flex-direction: row; gap: 18px; bottom: 35px; }
+  .vc-eye {
+    width: 16px; height: 20px; background: rgba(255,255,255,.9);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+  .vc-sparkles { position: absolute; top: 10px; right: 20px; font-size: .9rem; opacity: .8; }
+  .vc-neon-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,212,255,.15) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,212,255,.15) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .vc-neon-lines {
+    position: absolute; bottom: 20px;
+    width: 80%; height: 2px;
+    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  }
+  .vc-cyber-eye {
+    width: 14px; height: 8px; background: #00d4ff;
+    border-radius: 2px; box-shadow: 0 0 8px #00d4ff;
+  }
+  .vc-face--cyber { flex-direction: row; gap: 16px; bottom: 40px; }
+  .vc-watercolor {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(255,255,255,.4), transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(165,214,167,.6), transparent 50%);
+  }
+  .vc-clouds { position: absolute; top: 12px; font-size: 1.2rem; opacity: .7; letter-spacing: 4px; }
+  .vc-dot-eye {
+    width: 10px; height: 10px; background: #2e7d32;
+    border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,.3);
+  }
+  .vc-face--ghibli { flex-direction: row; gap: 18px; bottom: 30px; }
+  .vc-grid-lines {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+    background-image: linear-gradient(rgba(255,107,53,.4) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,107,53,.4) 1px, transparent 1px);
+    background-size: 15px 15px;
+    mask-image: linear-gradient(to top, rgba(0,0,0,1), transparent);
+  }
+  .vc-sun-retro {
+    position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+    width: 50px; height: 25px; background: linear-gradient(#ff6b35, #f7c948);
+    border-radius: 50px 50px 0 0;
+    box-shadow: 0 0 20px rgba(247,201,72,.5);
+  }
+  .vc-face--pixar { flex-direction: column; bottom: 25px; gap: 8px; }
+  .vc-round-eye-row { display: flex; gap: 20px; }
+  .vc-face--pixar .vc-round-eye-row,
+  .vc-face--pixar > * { display: flex; }
+  .vc-round-eye {
+    width: 22px; height: 22px; background: #fff;
+    border-radius: 50%; border: 2px solid rgba(0,0,0,.2);
+    box-shadow: inset -4px -4px 8px rgba(0,0,0,.15);
+  }
+  .vc-face--pixar { flex-direction: row; gap: 20px; bottom: 35px; align-items: center; }
+  .vc-smile {
+    position: absolute; bottom: 18px; width: 20px; height: 8px;
+    border-bottom: 3px solid rgba(255,255,255,.8); border-radius: 0 0 50% 50%;
+  }
+  .vc-sepia-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(141,110,99,.3), transparent 60%);
+  }
+  .vc-book-icon { font-size: 2.5rem; opacity: .6; }
+
+  /* ── CTA row ──────────────────────────────────────────────── */
+  .viral-cta-row {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 1.25rem; margin-top: 2rem;
+    padding: 1.5rem 1rem;
+    background: linear-gradient(135deg, rgba(255,107,53,.06), rgba(247,201,72,.06));
+    border: 1px solid rgba(255,107,53,.15); border-radius: 14px;
+  }
+  .viral-cta-text { font-size: .95rem; color: var(--texto-suave); }
+
+  @media (max-width: 768px) {
+    .viral-grid { grid-template-columns: repeat(2, 1fr); }
+    .viral-semana { padding: 2.5rem 1.5rem 1rem; }
+  }
+  @media (max-width: 480px) {
+    .viral-grid { grid-template-columns: 1fr; }
+    .viral-header { flex-direction: column; }
+  }
+</style>
+
+<!-- ── STATS ──────────────────────────────────────────────────── -->
+<div class="com-stats">
+  <div class="com-stat">
+    <div class="com-stat__num" id="stat-plantillas">—</div>
+    <div class="com-stat__lbl">Plantillas publicadas</div>
+  </div>
+  <div class="com-stat">
+    <div class="com-stat__num" id="stat-usos">—</div>
+    <div class="com-stat__lbl">Veces usadas</div>
+  </div>
+  <div class="com-stat">
+    <div class="com-stat__num" id="stat-creadores">—</div>
+    <div class="com-stat__lbl">Creadores activos</div>
+  </div>
+</div>
+
+<!-- ── FILTROS ────────────────────────────────────────────────── -->
+<div class="com-filtros">
+  <button class="com-filtro activo" data-cat="todos">Todos</button>
+  <button class="com-filtro" data-cat="Redes sociales">Redes sociales</button>
+  <button class="com-filtro" data-cat="Miniaturas YouTube">YouTube</button>
+  <button class="com-filtro" data-cat="Logos">Logos</button>
+  <button class="com-filtro" data-cat="Banners">Banners</button>
+  <button class="com-filtro" data-cat="Presentaciones">Presentaciones</button>
+  <button class="com-filtro" data-cat="Otro">Otro</button>
+</div>
+
+<!-- ── GRID ───────────────────────────────────────────────────── -->
+<div class="com-grid" id="com-grid">
+  <!-- Skeletons mientras carga -->
+  <div class="skeleton"></div>
+  <div class="skeleton"></div>
+  <div class="skeleton"></div>
+  <div class="skeleton"></div>
+  <div class="skeleton"></div>
+  <div class="skeleton"></div>
+</div>
+
+<!-- ── FAB ───────────────────────────────────────────────────── -->
+<button class="com-fab" onclick="window.abrirSubirDiseño && window.abrirSubirDiseño()">
+  🌟 Publicar diseño
+</button>
+
+<!-- ── SCRIPTS ───────────────────────────────────────────────── -->
+<script src="assets/js/config-sitio.js"></script>
+<script src="assets/js/main.js"></script>
+<script type="module">
+  import { initializeApp }                               from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, get, update }               from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAa-AG3Z3ou6YgIIQDh3yq1o76336rC4rY",
+    authDomain:        "pixeo-app-7880d.firebaseapp.com",
+    databaseURL:       "https://pixeo-app-7880d-default-rtdb.firebaseio.com",
+    projectId:         "pixeo-app-7880d",
+    storageBucket:     "pixeo-app-7880d.firebasestorage.app",
+    messagingSenderId: "225119050438",
+    appId:             "1:225119050438:web:979f943fefbab6c31155c7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  let todasLasPlantillas = [];
+  let categoriaActual    = 'todos';
+
+  /* ── Cargar plantillas ───────────────────────────────────── */
+  async function cargarPlantillas() {
+    const snap = await get(ref(db, 'comunidad'));
+    const grid = document.getElementById('com-grid');
+
+    if (!snap.exists()) {
+      grid.innerHTML = `
+        <div class="com-empty">
+          <div class="com-empty__ico">🎨</div>
+          <h3>¡Sé el primero en publicar!</h3>
+          <p>Aún no hay plantillas. Abre el editor, crea un diseño y publícalo para ganar <strong>+50 créditos</strong>.</p>
+        </div>`;
+      actualizarStats(0, 0, 0);
+      return;
+    }
+
+    // Convertir a array
+    todasLasPlantillas = Object.entries(snap.val()).map(([id, data]) => ({ id, ...data }));
+    // Ordenar por fecha desc
+    todasLasPlantillas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    // Calcular stats
+    const totalUsos     = todasLasPlantillas.reduce((s, p) => s + (p.descargas || 0), 0);
+    const creadores     = new Set(todasLasPlantillas.map(p => p.autorId)).size;
+    actualizarStats(todasLasPlantillas.length, totalUsos, creadores);
+
+    renderGrid(todasLasPlantillas);
+  }
+
+  /* ── Render grid ─────────────────────────────────────────── */
+  function renderGrid(plantillas) {
+    const grid = document.getElementById('com-grid');
+
+    const filtradas = categoriaActual === 'todos'
+      ? plantillas
+      : plantillas.filter(p => p.categoria === categoriaActual);
+
+    if (filtradas.length === 0) {
+      grid.innerHTML = `
+        <div class="com-empty">
+          <div class="com-empty__ico">🔍</div>
+          <h3>Sin plantillas en esta categoría</h3>
+          <p>¡Sé el primero en publicar en esta categoría!</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtradas.map(p => {
+      const inicial = (p.autor || 'U')[0].toUpperCase();
+      const imgHTML = p.imagen
+        ? `<img src="${p.imagen}" alt="${p.titulo}" class="com-card__img" loading="lazy">`
+        : `<div class="com-card__placeholder">🎨</div>`;
+      const avatarHTML = p.autorFoto
+        ? `<img src="${p.autorFoto}" class="com-card__avatar" alt="${p.autor}">`
+        : `<div class="com-card__avatar">${inicial}</div>`;
+      const hace = tiempoRelativo(p.fecha);
+
+      return `
+        <div class="com-card">
+          ${imgHTML}
+          <div class="com-card__body">
+            <div class="com-card__autor">
+              ${avatarHTML}
+              <span class="com-card__autor-nombre">${p.autor || 'Usuario'} · ${hace}</span>
+            </div>
+            <div class="com-card__titulo">${p.titulo}</div>
+            <div class="com-card__cat">${p.categoria || 'Diseño'}</div>
+            <div class="com-card__footer">
+              <span class="com-card__usos">🔥 ${p.descargas || 0} usos</span>
+              <button class="com-card__usar" onclick="usarPlantilla('${p.id}', '${p.titulo}')">
+                Usar plantilla
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ── Usar plantilla ──────────────────────────────────────── */
+  window.usarPlantilla = async function(id, titulo) {
+    // Incrementar contador de usos
+    const plantRef = ref(db, `comunidad/${id}`);
+    const snap     = await get(plantRef);
+    if (snap.exists()) {
+      await update(plantRef, { descargas: (snap.val().descargas || 0) + 1 });
+    }
+    // Ir al editor con la plantilla
+    window.location.href = `app.html?plantilla=${id}`;
+  };
+
+  /* ── Filtros ─────────────────────────────────────────────── */
+  document.querySelectorAll('.com-filtro').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.com-filtro').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      categoriaActual = btn.dataset.cat;
+      renderGrid(todasLasPlantillas);
+    });
+  });
+
+  /* ── Stats ───────────────────────────────────────────────── */
+  function actualizarStats(plantillas, usos, creadores) {
+    animarNumero('stat-plantillas', plantillas);
+    animarNumero('stat-usos', usos);
+    animarNumero('stat-creadores', creadores);
+  }
+
+  function animarNumero(id, final) {
+    const el  = document.getElementById(id);
+    if (!el) return;
+    const dur = 1000;
+    const ini = performance.now();
+    function paso(t) {
+      const prog = Math.min((t - ini) / dur, 1);
+      el.textContent = Math.round(prog * final).toLocaleString('es');
+      if (prog < 1) requestAnimationFrame(paso);
+    }
+    requestAnimationFrame(paso);
+  }
+
+  /* ── Tiempo relativo ─────────────────────────────────────── */
+  function tiempoRelativo(fecha) {
+    if (!fecha) return '';
+    const diff = Date.now() - new Date(fecha).getTime();
+    const min  = Math.floor(diff / 60000);
+    if (min < 60)  return `hace ${min}m`;
+    const h = Math.floor(min / 60);
+    if (h < 24)    return `hace ${h}h`;
+    const d = Math.floor(h / 24);
+    return `hace ${d}d`;
+  }
+
+  // Iniciar
+  cargarPlantillas();
+</script>
+<script type="module" src="assets/js/firebase-auth.js"></script>
+
+<script src="assets/js/onboarding.js"></script>
+</body>
+</html>

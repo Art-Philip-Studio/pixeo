@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# El link de retorno de PayPhone entra por GET a /.netlify/functions/confirmar-pago
+# Netlify ya lo sirve automáticamente, no requiere redirect especial.

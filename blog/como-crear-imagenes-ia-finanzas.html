@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cómo crear imágenes con IA para finanzas — Blog Pixeo</title>
+  <meta name="description" content="Aprende a crear imágenes profesionales con inteligencia artificial para contenido financiero: banners, infografías y más. Guía paso a paso con Pixeo." />
+  <meta name="keywords" content="imágenes IA finanzas, crear banners financieros, inteligencia artificial diseño, Pixeo, editor fotos online" />
+  <link rel="canonical" href="https://www.pixeo.com/blog/como-crear-imagenes-ia-finanzas.html" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    /* ── Variables (Pixeo: naranja primario + celeste acento) ── */
+    :root {
+      --primario:       #FF6B35;
+      --primario-suave: #FF8B5E;
+      --celeste:        #38BDF8;
+      --celeste-suave:  #7DD3FC;
+      --celeste-oscuro: #0EA5E9;
+      --secundario:     #1A1A2E;
+      --acento:         #F7C948;
+      --superficie:     #16213E;
+      --superficie2:    #1E2A45;
+      --texto:          #E8E8F0;
+      --texto-suave:    #8888AA;
+      --fondo:          #0F0F1A;
+      --borde:          rgba(255,255,255,0.08);
+      --radio:          14px;
+      --radio-lg:       24px;
+      --fuente-titulo:  'Syne', sans-serif;
+      --fuente-cuerpo:  'DM Sans', sans-serif;
+      --contenedor:     1200px;
+      --nav-alto:       72px;
+      --transicion:     0.25s cubic-bezier(0.4,0,0.2,1);
+      --sombra-celeste: 0 8px 32px rgba(56,189,248,0.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--fuente-cuerpo); background: var(--fondo); color: var(--texto); line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--fondo); }
+    ::-webkit-scrollbar-thumb { background: var(--superficie2); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--celeste); }
+
+    h1,h2,h3,h4,h5,h6 {
+      font-family: var(--fuente-titulo);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -.03em;
+    }
+
+    .contenedor { max-width: var(--contenedor); margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-alto); z-index: 1000;
+      transition: background var(--transicion), backdrop-filter var(--transicion);
+    }
+    .navbar.scrolled {
+      background: rgba(15,15,26,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--borde);
+    }
+    .navbar__inner {
+      height: 100%; display: flex; align-items: center; gap: 2rem;
+      max-width: var(--contenedor); margin: 0 auto; padding: 0 1.5rem;
+    }
+    .navbar__logo {
+      display: flex; align-items: center; gap: .6rem;
+      font-family: var(--fuente-titulo); font-weight: 800;
+      font-size: 1.35rem; letter-spacing: -.04em; color: var(--texto); flex-shrink: 0;
+    }
+    .navbar__logo-icono {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primario), var(--celeste));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .navbar__logo span { color: var(--primario); }
+
+    .navbar__nav { display: flex; gap: .25rem; margin-left: auto; }
+    .navbar__enlace {
+      padding: .5rem .9rem; border-radius: 999px;
+      font-size: .9rem; font-weight: 500; color: var(--texto-suave);
+      transition: all var(--transicion);
+    }
+    .navbar__enlace:hover, .navbar__enlace.activo { color: var(--texto); background: rgba(255,255,255,0.06); }
+
+    .navbar__acciones { display: flex; align-items: center; gap: .75rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .65rem 1.4rem; border-radius: 999px;
+      font-family: var(--fuente-titulo); font-weight: 700; font-size: .9rem;
+      transition: all var(--transicion); white-space: nowrap; border: none; cursor: pointer;
+    }
+    .btn-primario { background: var(--primario); color: #fff; }
+    .btn-primario:hover { background: var(--primario-suave); transform: translateY(-2px); }
+    .btn-celeste {
+      background: var(--primario);
+      color: #fff; 
+    }
+    .btn-celeste:hover { background: var(--primario-suave); transform: translateY(-2px); }
+
+    .navbar__hamburguesa {
+      display: none; flex-direction: column; gap: 5px;
+      width: 38px; height: 38px; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--borde);
+      border-radius: 10px; cursor: pointer; margin-left: auto;
+    }
+    .navbar__hamburguesa span {
+      display: block; width: 18px; height: 2px;
+      background: var(--texto); border-radius: 2px; transition: all var(--transicion);
+    }
+
+    /* ── HERO DEL ARTÍCULO ── */
+    .articulo-hero {
+      padding: calc(var(--nav-alto) + 5rem) 0 4rem;
+      position: relative; overflow: hidden;
+    }
+    .articulo-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 800px 500px at 10% 50%, rgba(56,189,248,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 90% 20%, rgba(255,107,53,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    /* Decorative grid lines */
+    .articulo-hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .articulo-hero__inner { position: relative; z-index: 1; max-width: 800px; }
+
+    .articulo-meta {
+      display: flex; align-items: center; gap: .75rem;
+      flex-wrap: wrap; margin-bottom: 1.75rem;
+    }
+    .tag-categoria {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .35rem 1rem; border-radius: 999px;
+      font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .tag-categoria--ia {
+      background: rgba(56,189,248,0.12);
+      border: 1px solid rgba(56,189,248,0.3);
+      color: var(--celeste);
+    }
+    .tag-categoria--diseño {
+      background: rgba(255,107,53,0.12);
+      border: 1px solid rgba(255,107,53,0.3);
+      color: var(--primario);
+    }
+    .tag-fecha { font-size: .8rem; color: var(--texto-suave); }
+
+    .articulo-hero__titulo {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, var(--texto) 0%, var(--celeste-suave) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .articulo-hero__intro {
+      font-size: 1.15rem; color: var(--texto-suave); max-width: 640px;
+      line-height: 1.75; margin-bottom: 2rem;
+    }
+
+    .articulo-stats {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .85rem; color: var(--texto-suave);
+    }
+    .stat-item i { color: var(--celeste); font-size: .8rem; }
+
+    /* ── LAYOUT ARTÍCULO ── */
+    .articulo-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 3rem;
+      padding: 4rem 0 6rem;
+      align-items: start;
+    }
+
+    /* ── CONTENIDO PRINCIPAL ── */
+    .articulo-contenido {
+      min-width: 0;
+    }
+
+    /* Imagen destacada */
+    .imagen-destacada {
+      width: 100%; border-radius: var(--radio-lg);
+      aspect-ratio: 16/7;
+      background: linear-gradient(135deg, var(--superficie) 0%, var(--superficie2) 100%);
+      border: 1px solid var(--borde);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .imagen-destacada__visual {
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .imagen-destacada__icono {
+      font-size: 4rem;
+      background: linear-gradient(135deg, var(--primario), var(--celeste));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .imagen-destacada__texto {
+      font-family: var(--fuente-titulo); font-size: 1.1rem; font-weight: 700;
+      color: var(--texto-suave); text-align: center;
+    }
+    /* Floating blobs inside image */
+    .imagen-destacada::before {
+      content: '';
+      position: absolute; width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(56,189,248,0.15), transparent 70%);
+      top: -80px; right: -60px; border-radius: 50%;
+    }
+    .imagen-destacada::after {
+      content: '';
+      position: absolute; width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(255,107,53,0.12), transparent 70%);
+      bottom: -80px; left: -40px; border-radius: 50%;
+    }
+
+    /* Secciones del artículo */
+    .seccion-articulo { margin-bottom: 3rem; }
+
+    .seccion-articulo h2 {
+      font-size: 1.6rem; margin-bottom: 1rem;
+      padding-bottom: .75rem;
+      border-bottom: 2px solid;
+      border-image: linear-gradient(90deg, var(--celeste), transparent) 1;
+    }
+    .seccion-articulo h3 {
+      font-size: 1.15rem; margin-bottom: .75rem; color: var(--celeste-suave);
+    }
+    .seccion-articulo p {
+      color: var(--texto-suave); line-height: 1.8; margin-bottom: 1rem; font-size: .97rem;
+    }
+    .seccion-articulo p strong { color: var(--texto); }
+
+    /* Callout / destacado */
+    .callout {
+      background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(56,189,248,0.04));
+      border: 1px solid rgba(56,189,248,0.2);
+      border-left: 3px solid var(--celeste);
+      border-radius: 0 var(--radio) var(--radio) 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .callout__titulo {
+      font-family: var(--fuente-titulo); font-weight: 700;
+      font-size: .85rem; color: var(--celeste); margin-bottom: .5rem;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .callout p { margin-bottom: 0; font-size: .9rem; }
+
+    .callout--naranja {
+      background: linear-gradient(135deg, rgba(255,107,53,0.08), rgba(255,107,53,0.04));
+      border-color: rgba(255,107,53,0.2);
+      border-left-color: var(--primario);
+    }
+    .callout--naranja .callout__titulo { color: var(--primario); }
+
+    /* Lista estilizada */
+    .lista-check { list-style: none; padding: 0; margin: 1rem 0 1.5rem; }
+    .lista-check li {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .7rem 0; border-bottom: 1px solid var(--borde);
+      font-size: .93rem; color: var(--texto-suave); line-height: 1.6;
+    }
+    .lista-check li:last-child { border-bottom: none; }
+    .lista-check li::before {
+      content: '✦';
+      color: var(--celeste); font-size: .7rem;
+      flex-shrink: 0; margin-top: .3rem;
+    }
+    .lista-check li strong { color: var(--texto); }
+
+    /* Pasos numerados */
+    .pasos { display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0; }
+    .paso {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+    }
+    .paso__numero {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--primario);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fuente-titulo); font-weight: 800; font-size: 1rem; color: #fff;
+      
+    }
+    .paso__contenido h3 { font-size: 1rem; margin-bottom: .4rem; color: var(--texto); }
+    .paso__contenido p { font-size: .9rem; margin-bottom: 0; }
+
+    /* Grid de herramientas */
+    .herramientas-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0;
+    }
+    .herramienta-card {
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio);
+      padding: 1.25rem;
+      transition: all var(--transicion);
+      position: relative; overflow: hidden;
+    }
+    .herramienta-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--celeste), var(--primario));
+      opacity: 0; transition: opacity var(--transicion);
+    }
+    .herramienta-card:hover { border-color: rgba(56,189,248,0.3); transform: translateY(-3px); }
+    .herramienta-card:hover::before { opacity: 1; }
+
+    .herramienta-card__icono { font-size: 1.8rem; margin-bottom: .75rem; }
+    .herramienta-card__nombre {
+      font-family: var(--fuente-titulo); font-weight: 700; font-size: .95rem;
+      color: var(--texto); margin-bottom: .4rem;
+    }
+    .herramienta-card__desc { font-size: .82rem; color: var(--texto-suave); line-height: 1.6; }
+    .herramienta-card__badge {
+      display: inline-block; margin-top: .6rem;
+      padding: .2rem .65rem; border-radius: 999px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .04em;
+    }
+    .badge-gratis { background: rgba(56,189,248,0.12); color: var(--celeste); border: 1px solid rgba(56,189,248,0.25); }
+    .badge-creditos { background: rgba(247,201,72,0.12); color: var(--acento); border: 1px solid rgba(247,201,72,0.25); }
+
+    /* CTA interno */
+    .cta-interno {
+      background: linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(255,107,53,0.06) 100%);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: var(--radio-lg);
+      padding: 2rem;
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+    .cta-interno h3 {
+      font-size: 1.3rem; margin-bottom: .5rem;
+      background: linear-gradient(135deg, var(--celeste), var(--primario));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .cta-interno p { font-size: .9rem; color: var(--texto-suave); margin-bottom: 1.25rem; }
+    .cta-interno__botones { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+
+    /* Tabla comparativa */
+    .tabla-wrap { overflow-x: auto; margin: 1.5rem 0; border-radius: var(--radio); border: 1px solid var(--borde); }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: var(--superficie2);
+      padding: .85rem 1rem;
+      font-family: var(--fuente-titulo); font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em; color: var(--texto-suave);
+      text-align: left;
+    }
+    td {
+      padding: .85rem 1rem;
+      font-size: .88rem; color: var(--texto-suave);
+      border-top: 1px solid var(--borde);
+    }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    td:first-child { color: var(--texto); font-weight: 600; }
+    .check-si { color: var(--celeste); font-weight: 700; }
+    .check-no { color: var(--texto-suave); opacity: .5; }
+
+    /* ── SIDEBAR ── */
+    .articulo-sidebar { position: sticky; top: calc(var(--nav-alto) + 1.5rem); }
+
+    .sidebar-card {
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .sidebar-card__titulo {
+      font-family: var(--fuente-titulo); font-size: .75rem; font-weight: 700;
+      color: var(--texto-suave); text-transform: uppercase;
+      letter-spacing: .08em; margin-bottom: 1rem;
+    }
+
+    /* Índice */
+    .indice-lista { list-style: none; }
+    .indice-lista li { margin-bottom: .5rem; }
+    .indice-lista a {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .85rem; color: var(--texto-suave);
+      padding: .4rem .5rem; border-radius: 8px;
+      transition: all var(--transicion);
+    }
+    .indice-lista a::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--borde); flex-shrink: 0; transition: background var(--transicion);
+    }
+    .indice-lista a:hover { color: var(--celeste); background: rgba(56,189,248,0.06); }
+    .indice-lista a:hover::before { background: var(--celeste); }
+
+    /* Autor card */
+    .autor-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primario), var(--celeste));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1rem;
+    }
+    .autor-nombre {
+      font-family: var(--fuente-titulo); font-weight: 700; font-size: .95rem;
+      margin-bottom: .25rem;
+    }
+    .autor-bio { font-size: .8rem; color: var(--texto-suave); line-height: 1.6; margin-bottom: 1rem; }
+    .autor-redes { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .autor-red {
+      width: 32px; height: 32px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--borde);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; color: var(--texto-suave);
+      transition: all var(--transicion);
+    }
+    .autor-red:hover { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); color: var(--celeste); }
+
+    /* CTA sidebar */
+    .sidebar-cta {
+      background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(255,107,53,0.08));
+      border: 1px solid rgba(56,189,248,0.2);
+      text-align: center;
+    }
+    .sidebar-cta h3 { font-size: 1rem; margin-bottom: .5rem; }
+    .sidebar-cta p { font-size: .82rem; color: var(--texto-suave); margin-bottom: 1rem; }
+
+    /* ── ARTÍCULOS RELACIONADOS ── */
+    .relacionados { padding: 4rem 0 6rem; }
+    .relacionados__titulo {
+      font-size: 1.5rem; margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .relacionados__titulo::after {
+      content: ''; flex: 1; height: 1px; background: var(--borde);
+    }
+    .relacionados-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+    }
+    .art-card {
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio-lg);
+      padding: 1.5rem;
+      transition: all var(--transicion); cursor: pointer;
+    }
+    .art-card:hover { border-color: rgba(56,189,248,0.3); transform: translateY(-4px); }
+    .art-card__tag {
+      display: inline-block; padding: .25rem .75rem; border-radius: 999px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+      background: rgba(56,189,248,0.1); color: var(--celeste); margin-bottom: 1rem;
+    }
+    .art-card__titulo { font-size: 1rem; margin-bottom: .5rem; }
+    .art-card__desc { font-size: .82rem; color: var(--texto-suave); line-height: 1.6; }
+    .art-card__footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--borde);
+      font-size: .78rem; color: var(--texto-suave);
+    }
+    .art-card__leer { color: var(--celeste); font-weight: 600; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--secundario); border-top: 1px solid var(--borde); padding: 4rem 0 2rem;
+    }
+    .footer__grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer__marca {
+      font-family: var(--fuente-titulo); font-size: 1.5rem;
+      font-weight: 800; letter-spacing: -.04em; margin-bottom: 1rem;
+    }
+    .footer__marca span { color: var(--celeste); }
+    .footer__descripcion { font-size: .875rem; color: var(--texto-suave); line-height: 1.7; max-width: 280px; margin-bottom: 1.5rem; }
+    .footer__redes { display: flex; gap: .6rem; flex-wrap: wrap; }
+    .footer__red {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--borde);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; color: var(--texto-suave); transition: all var(--transicion);
+    }
+    .footer__red:hover { background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.3); color: var(--celeste); transform: translateY(-2px); }
+    .footer__col-titulo {
+      font-family: var(--fuente-titulo); font-size: .85rem; font-weight: 700;
+      color: var(--texto); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .footer__enlace { display: block; font-size: .875rem; color: var(--texto-suave); margin-bottom: .75rem; transition: color var(--transicion); }
+    .footer__enlace:hover { color: var(--celeste); }
+    .footer__bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 2rem; border-top: 1px solid var(--borde); flex-wrap: wrap; gap: 1rem;
+    }
+    .footer__copy { font-size: .8rem; color: var(--texto-suave); }
+    .footer__legales { display: flex; gap: 1.5rem; }
+    .footer__legal { font-size: .8rem; color: var(--texto-suave); transition: color var(--transicion); }
+    .footer__legal:hover { color: var(--celeste); }
+
+    /* ── Fade-up animation ── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .articulo-layout { grid-template-columns: 1fr; }
+      .articulo-sidebar { position: static; }
+      .relacionados-grid { grid-template-columns: 1fr 1fr; }
+      .herramientas-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .navbar__nav, .navbar__acciones { display: none; }
+      .navbar__hamburguesa { display: flex; }
+      .navbar__nav.abierto {
+        display: flex; flex-direction: column;
+        position: fixed; top: var(--nav-alto); left: 0; right: 0;
+        background: rgba(15,15,26,0.98); backdrop-filter: blur(20px);
+        padding: 1.5rem; gap: .5rem; border-bottom: 1px solid var(--borde);
+      }
+      .relacionados-grid { grid-template-columns: 1fr; }
+      .herramientas-grid { grid-template-columns: 1fr; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+      .articulo-stats { gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <div class="navbar__logo-icono">⚡</div>
+        Pixeo
+      </a>
+      <nav class="navbar__nav" id="nav-menu">
+        <a href="../index.html" class="navbar__enlace">Inicio</a>
+        <a href="../app.html" class="navbar__enlace">Editor</a>
+        <a href="index.html" class="navbar__enlace activo">Blog</a>
+        <a href="../contacto.html" class="navbar__enlace">Contacto</a>
+      </nav>
+      <div class="navbar__acciones">
+        <a href="../app.html" class="btn btn-celeste">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Crear gratis
+        </a>
+      </div>
+      <button class="navbar__hamburguesa" id="hamburguesa" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <header class="articulo-hero">
+    <div class="contenedor">
+      <div class="articulo-hero__inner fade-up">
+        <div class="articulo-meta">
+          <span class="tag-categoria tag-categoria--ia"><i class="fa-solid fa-robot"></i> Inteligencia Artificial</span>
+          <span class="tag-categoria tag-categoria--diseño"><i class="fa-solid fa-palette"></i> Diseño</span>
+          <span class="tag-fecha"><i class="fa-regular fa-calendar" style="margin-right:.3rem;"></i> Mayo 2026</span>
+        </div>
+        <h1 class="articulo-hero__titulo">Cómo crear imágenes con IA para contenido de finanzas</h1>
+        <p class="articulo-hero__intro">
+          Los creadores de contenido financiero que usan imágenes profesionales generan hasta 3× más engagement. Aprende paso a paso cómo crear banners, infografías y visuales impactantes con IA — sin ser diseñador y sin gastar un dólar.
+        </p>
+        <div class="articulo-stats">
+          <span class="stat-item"><i class="fa-solid fa-clock"></i> 8 min de lectura</span>
+          <span class="stat-item"><i class="fa-solid fa-eye"></i> 4,821 vistas</span>
+          <span class="stat-item"><i class="fa-solid fa-star"></i> Nivel: Principiante</span>
+          <span class="stat-item"><i class="fa-solid fa-coins" style="color:var(--acento);"></i> Herramientas gratis disponibles</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── CUERPO ── -->
+  <main>
+    <div class="contenedor">
+      <div class="articulo-layout">
+
+        <!-- CONTENIDO -->
+        <article class="articulo-contenido">
+
+          <!-- Imagen destacada -->
+          <div class="imagen-destacada fade-up">
+            <div class="imagen-destacada__visual" style="position:relative;z-index:1;">
+              <div class="imagen-destacada__icono">🎨⚡</div>
+              <div class="imagen-destacada__texto">IA + Diseño Financiero = Contenido que convierte</div>
+              <div style="display:flex;gap:.5rem;margin-top:.5rem;">
+                <span style="padding:.3rem .8rem;background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);border-radius:999px;font-size:.75rem;color:var(--celeste);">Generación IA</span>
+                <span style="padding:.3rem .8rem;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.3);border-radius:999px;font-size:.75rem;color:var(--primario);">Eliminar fondo</span>
+                <span style="padding:.3rem .8rem;background:rgba(247,201,72,.15);border:1px solid rgba(247,201,72,.3);border-radius:999px;font-size:.75rem;color:var(--acento);">Exportar HD</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección 1 -->
+          <section class="seccion-articulo fade-up" id="por-que-importa">
+            <h2>¿Por qué las imágenes importan en finanzas?</h2>
+            <p>El contenido financiero tiene fama de ser <strong>aburrido y difícil de entender</strong>. Gráficos con números, textos densos, tablas interminables. Pero la realidad es que hay una audiencia masiva hambrienta de educación financiera — y quien logra presentarla de forma visual y atractiva, gana.</p>
+            <p>Según estudios de redes sociales, los posts con imágenes personalizadas y profesionales reciben <strong>hasta 3 veces más interacciones</strong> que los que usan fotos de stock genéricas o ninguna imagen. En el nicho financiero, esto es aún más marcado porque la competencia visual es baja.</p>
+
+            <div class="callout">
+              <div class="callout__titulo">💡 Dato clave</div>
+              <p>Un banner bien diseñado sobre "cómo funciona el interés compuesto" puede conseguir más guardados en Instagram que 10 posts de texto. El diseño no es decorativo — <strong>es estrategia de contenido</strong>.</p>
+            </div>
+          </section>
+
+          <!-- Sección 2 -->
+          <section class="seccion-articulo fade-up" id="tipos-imagenes">
+            <h2>Tipos de imágenes que necesitas para finanzas</h2>
+            <p>Antes de abrir cualquier herramienta, define qué tipo de imagen quieres crear. Cada formato tiene un objetivo diferente:</p>
+
+            <ul class="lista-check">
+              <li><strong>Banners para redes sociales:</strong> Imágenes cuadradas o rectangulares para Instagram, Facebook y LinkedIn. Deben ser llamativas y legibles en móvil.</li>
+              <li><strong>Infografías:</strong> Explican conceptos complejos (como el interés compuesto o cómo funciona un préstamo) de forma visual. Muy compartibles.</li>
+              <li><strong>Miniaturas para YouTube:</strong> Críticas para el CTR. Necesitan texto grande, colores contrastantes y una cara expresiva si es posible.</li>
+              <li><strong>Carruseles educativos:</strong> Serie de imágenes para Instagram o LinkedIn que explican un tema paso a paso. Generan más tiempo en el post.</li>
+              <li><strong>Imágenes para blog o artículos:</strong> Como la que estás viendo ahora. Refuerzan la identidad visual y mejoran el SEO (con buen alt text).</li>
+            </ul>
+          </section>
+
+          <!-- CTA interno -->
+          <div class="cta-interno fade-up">
+            <h3>Crea tus primeras imágenes ahora mismo</h3>
+            <p>Pixeo tiene plantillas financieras listas para editar. Empieza gratis, sin registro.</p>
+            <div class="cta-interno__botones">
+              <a href="../app.html" class="btn btn-celeste"><i class="fa-solid fa-wand-magic-sparkles"></i> Abrir Editor Gratis</a>
+              <a href="../app.html?tab=templates" class="btn" style="background:rgba(255,255,255,0.06);color:var(--texto);border:1px solid var(--borde);">Ver Plantillas</a>
+            </div>
+          </div>
+
+          <!-- Sección 3 -->
+          <section class="seccion-articulo fade-up" id="herramientas">
+            <h2>Herramientas que puedes usar (gratis y de pago)</h2>
+            <p>El mercado de diseño con IA creció exponencialmente en los últimos dos años. Aquí te comparo las opciones más relevantes para creadores de contenido financiero:</p>
+
+            <div class="herramientas-grid">
+              <div class="herramienta-card">
+                <div class="herramienta-card__icono">⚡</div>
+                <div class="herramienta-card__nombre">Pixeo</div>
+                <div class="herramienta-card__desc">Editor online completo con generación IA, eliminación de fondos y plantillas financieras. Interfaz en español.</div>
+                <span class="herramienta-card__badge badge-gratis">Gratis + Créditos</span>
+              </div>
+              <div class="herramienta-card">
+                <div class="herramienta-card__icono">🎨</div>
+                <div class="herramienta-card__nombre">Canva</div>
+                <div class="herramienta-card__desc">Versátil y con muchas plantillas. La IA (Magic Studio) está en el plan Pro. Buena opción para comenzar.</div>
+                <span class="herramienta-card__badge badge-gratis">Freemium</span>
+              </div>
+              <div class="herramienta-card">
+                <div class="herramienta-card__icono">🤖</div>
+                <div class="herramienta-card__nombre">Midjourney</div>
+                <div class="herramienta-card__desc">Genera imágenes con prompts de texto. Resultados impresionantes pero requiere práctica con prompts.</div>
+                <span class="herramienta-card__badge badge-creditos">Solo pago</span>
+              </div>
+              <div class="herramienta-card">
+                <div class="herramienta-card__icono">🖼️</div>
+                <div class="herramienta-card__nombre">Adobe Firefly</div>
+                <div class="herramienta-card__desc">IA de Adobe integrada con Photoshop. Muy potente pero orientada a usuarios con experiencia en Adobe.</div>
+                <span class="herramienta-card__badge badge-creditos">Plan Creative Cloud</span>
+              </div>
+            </div>
+
+            <div class="callout callout--naranja">
+              <div class="callout__titulo">⭐ Recomendación del autor</div>
+              <p>Para creadores de contenido financiero en LATAM, <strong>Pixeo + Canva gratuito</strong> es la combinación ideal. Pixeo para la generación IA y edición avanzada, Canva para plantillas de redes. Ambos sin necesidad de instalar nada.</p>
+            </div>
+          </section>
+
+          <!-- Sección 4 -->
+          <section class="seccion-articulo fade-up" id="paso-a-paso">
+            <h2>Paso a paso: crea tu primera imagen financiera con IA</h2>
+            <p>Vamos a crear un banner para Instagram explicando el concepto de "interés compuesto". Es uno de los temas más buscados en finanzas personales y genera mucho engagement cuando está bien visualizado.</p>
+
+            <div class="pasos">
+              <div class="paso">
+                <div class="paso__numero">1</div>
+                <div class="paso__contenido">
+                  <h3>Define el concepto y el mensaje principal</h3>
+                  <p>Antes de abrir el editor, escribe en papel: ¿qué quiero que el usuario entienda en 3 segundos? Para el interés compuesto: <em>"$100 hoy valen más que $100 mañana"</em>. Ese es tu titular.</p>
+                </div>
+              </div>
+              <div class="paso">
+                <div class="paso__numero">2</div>
+                <div class="paso__contenido">
+                  <h3>Genera la imagen de fondo con IA</h3>
+                  <p>En Pixeo, usa la herramienta <strong>Generar imagen con IA</strong>. Prueba este prompt: <em>"abstract financial growth chart, blue sky gradient, minimalist, professional, 4K"</em>. Ajusta hasta que te guste el resultado.</p>
+                </div>
+              </div>
+              <div class="paso">
+                <div class="paso__numero">3</div>
+                <div class="paso__contenido">
+                  <h3>Agrega texto con jerarquía visual</h3>
+                  <p>Usa 3 niveles de texto: <strong>titular grande</strong> (el mensaje principal), subtítulo mediano (cifras o datos) y texto pequeño (tu marca o fuente). Nunca pongas más de 30 palabras en una imagen.</p>
+                </div>
+              </div>
+              <div class="paso">
+                <div class="paso__numero">4</div>
+                <div class="paso__contenido">
+                  <h3>Ajusta colores con la paleta de tu marca</h3>
+                  <p>La consistencia de colores te hace reconocible. Si tu marca financiera usa verde y azul, úsalos siempre. Pixeo te permite guardar paletas para reutilizar.</p>
+                </div>
+              </div>
+              <div class="paso">
+                <div class="paso__numero">5</div>
+                <div class="paso__contenido">
+                  <h3>Exporta en el formato correcto</h3>
+                  <p>Instagram: 1080×1080 JPG (calidad 90%). LinkedIn: 1200×627 PNG. YouTube miniatura: 1280×720 JPG. Para blog: WebP para mejor performance.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección 5 -->
+          <section class="seccion-articulo fade-up" id="prompts">
+            <h2>Prompts de IA listos para finanzas</h2>
+            <p>Un prompt bien escrito es la diferencia entre una imagen genérica y una que realmente comunica. Aquí tienes prompts probados para el nicho financiero:</p>
+
+            <ul class="lista-check">
+              <li><strong>"Growth chart ascending, clean minimal design, blue and gold color scheme, professional financial, no text"</strong> — Para gráficos de crecimiento de inversiones.</li>
+              <li><strong>"Piggy bank with coins floating around, flat design illustration, light background, vibrant colors"</strong> — Para contenido de ahorro y fondo de emergencia.</li>
+              <li><strong>"Abstract network of connected nodes representing financial system, dark background, cyan accents, futuristic"</strong> — Para contenido sobre fintech o criptomonedas.</li>
+              <li><strong>"Stack of books with financial charts, warm lighting, bokeh background, professional photography style"</strong> — Para artículos educativos sobre inversión.</li>
+              <li><strong>"Calendar with coins and dollar signs, flat icon style, green and white, clean background"</strong> — Para contenido sobre presupuesto mensual.</li>
+            </ul>
+
+            <div class="callout">
+              <div class="callout__titulo">🔑 Truco pro</div>
+              <p>Siempre termina tus prompts con <strong>"no text, no watermark, high quality, professional"</strong> para evitar texto generado por la IA (que suele ser ilegible) y obtener imágenes más limpias para editar.</p>
+            </div>
+          </section>
+
+          <!-- Tabla comparativa -->
+          <section class="seccion-articulo fade-up" id="comparacion">
+            <h2>Comparativa: Pixeo vs. otras herramientas</h2>
+            <div class="tabla-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Característica</th>
+                    <th>Pixeo</th>
+                    <th>Canva Gratis</th>
+                    <th>Midjourney</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Generación de imagen IA</td>
+                    <td class="check-si">✦ Sí (créditos)</td>
+                    <td class="check-no">✕ Solo Pro</td>
+                    <td class="check-si">✦ Sí (pago)</td>
+                  </tr>
+                  <tr>
+                    <td>Eliminación de fondo</td>
+                    <td class="check-si">✦ Sí (créditos)</td>
+                    <td class="check-no">✕ Solo Pro</td>
+                    <td class="check-no">✕ No</td>
+                  </tr>
+                  <tr>
+                    <td>Plantillas financieras</td>
+                    <td class="check-si">✦ Sí</td>
+                    <td class="check-si">✦ Sí</td>
+                    <td class="check-no">✕ No</td>
+                  </tr>
+                  <tr>
+                    <td>Sin instalación</td>
+                    <td class="check-si">✦ 100% web</td>
+                    <td class="check-si">✦ 100% web</td>
+                    <td class="check-no">✕ Requiere Discord</td>
+                  </tr>
+                  <tr>
+                    <td>Exportar en 4K/HD</td>
+                    <td class="check-si">✦ Sí (créditos)</td>
+                    <td class="check-no">✕ Limitado</td>
+                    <td class="check-si">✦ Sí</td>
+                  </tr>
+                  <tr>
+                    <td>Interfaz en español</td>
+                    <td class="check-si">✦ Completa</td>
+                    <td class="check-si">✦ Completa</td>
+                    <td class="check-no">✕ Solo inglés</td>
+                  </tr>
+                  <tr>
+                    <td>Precio base</td>
+                    <td class="check-si">✦ Gratis</td>
+                    <td class="check-si">✦ Gratis</td>
+                    <td style="color:var(--texto-suave);">$10/mes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Sección final -->
+          <section class="seccion-articulo fade-up" id="conclusiones">
+            <h2>Conclusiones y próximos pasos</h2>
+            <p>Crear imágenes profesionales para contenido financiero ya no es exclusivo de diseñadores con años de experiencia. Con herramientas de IA como las que tiene Pixeo, <strong>cualquier creador puede producir visuales de calidad profesional</strong> en minutos.</p>
+            <p>Lo más importante es mantener <strong>consistencia visual</strong>: mismos colores, misma tipografía, mismo estilo. Eso construye reconocimiento de marca y confianza — dos elementos críticos en el nicho financiero.</p>
+
+            <ul class="lista-check">
+              <li>Empieza con <strong>3-5 plantillas base</strong> que puedas reutilizar para diferentes temas.</li>
+              <li>Crea una paleta de colores de 3-4 colores y úsala siempre.</li>
+              <li>Genera las imágenes IA en bulk: en una sesión de 30 minutos puedes crear material para 2 semanas.</li>
+              <li>Mide qué posts generan más guardados — eso te dice qué tipo de imagen funciona mejor con tu audiencia.</li>
+            </ul>
+
+            <div class="callout callout--naranja">
+              <div class="callout__titulo">🚀 Tu siguiente paso</div>
+              <p>Abre Pixeo ahora mismo y crea tu primera imagen financiera. Tienes <strong>50 créditos gratuitos</strong> al registrarte — suficientes para generar 2-3 imágenes con IA y probar todas las funciones.</p>
+            </div>
+          </section>
+
+          <!-- CTA final -->
+          <div class="cta-interno fade-up" style="background:linear-gradient(135deg,rgba(56,189,248,0.1),rgba(255,107,53,0.08)); border-color:rgba(56,189,248,0.3);">
+            <h3>¿Listo para crear contenido financiero que destaque?</h3>
+            <p>Únete a miles de creadores que ya usan Pixeo para producir imágenes profesionales con IA — gratis.</p>
+            <div class="cta-interno__botones">
+              <a href="../app.html" class="btn btn-celeste btn-grande"><i class="fa-solid fa-wand-magic-sparkles"></i> Empezar gratis ahora</a>
+              <a href="../contacto.html" class="btn" style="background:rgba(255,255,255,0.06);color:var(--texto);border:1px solid var(--borde);">¿Tienes preguntas?</a>
+            </div>
+          </div>
+
+        </article>
+
+        <!-- SIDEBAR -->
+        <aside class="articulo-sidebar">
+
+          <!-- Índice -->
+          <div class="sidebar-card">
+            <div class="sidebar-card__titulo">En este artículo</div>
+            <ul class="indice-lista">
+              <li><a href="#por-que-importa">¿Por qué importan las imágenes?</a></li>
+              <li><a href="#tipos-imagenes">Tipos de imágenes</a></li>
+              <li><a href="#herramientas">Herramientas disponibles</a></li>
+              <li><a href="#paso-a-paso">Guía paso a paso</a></li>
+              <li><a href="#prompts">Prompts listos para usar</a></li>
+              <li><a href="#comparacion">Comparativa de herramientas</a></li>
+              <li><a href="#conclusiones">Conclusiones</a></li>
+            </ul>
+          </div>
+
+          <!-- Autor -->
+          <div class="sidebar-card">
+            <div class="sidebar-card__titulo">Sobre el autor</div>
+            <div class="autor-avatar">🎨</div>
+            <div class="autor-nombre">Philip · Art Philip Studio</div>
+            <div class="autor-bio">Diseñador web y creador de contenido digital. Especializado en herramientas visuales para emprendedores y creadores en Ecuador y LATAM.</div>
+            <div class="autor-redes">
+              <a href="https://www.instagram.com/art_philip_studio/" target="_blank" rel="noopener" class="autor-red" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="https://www.tiktok.com/@artphilipstudio" target="_blank" rel="noopener" class="autor-red" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+              <a href="https://www.youtube.com/@ArtPhilipStudio" target="_blank" rel="noopener" class="autor-red" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+              <a href="https://www.facebook.com/artphilipstudio/" target="_blank" rel="noopener" class="autor-red" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+              <a href="https://pin.it/6KGtEE3qR" target="_blank" rel="noopener" class="autor-red" title="Pinterest"><i class="fa-brands fa-pinterest"></i></a>
+              <a href="https://api.whatsapp.com/send/?phone=593968352133" target="_blank" rel="noopener" class="autor-red" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+              <a href="https://www.linkedin.com/in/fernando-tello-dev" target="_blank" rel="noopener" class="autor-red" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+          </div>
+
+          <!-- CTA sidebar -->
+          <div class="sidebar-card sidebar-cta">
+            <div class="sidebar-card__titulo">Prueba gratis</div>
+            <h3>Editor Pixeo</h3>
+            <p>50 créditos de bienvenida. Sin tarjeta de crédito.</p>
+            <a href="../app.html" class="btn btn-celeste" style="width:100%;justify-content:center;">
+              <i class="fa-solid fa-bolt"></i> Crear ahora
+            </a>
+          </div>
+
+          <!-- Portafolio -->
+          <div class="sidebar-card" style="text-align:center;">
+            <div class="sidebar-card__titulo">¿Necesitas un sitio web?</div>
+            <p style="font-size:.82rem;color:var(--texto-suave);margin-bottom:1rem;line-height:1.6;">Philip diseña y desarrolla sitios web profesionales para Ecuador y LATAM.</p>
+            <a href="https://art-philip-studio.github.io/Art-Philip-Studio/" target="_blank" rel="noopener"
+               class="btn" style="width:100%;justify-content:center;background:rgba(255,255,255,0.06);border:1px solid var(--borde);font-size:.85rem;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver portafolio
+            </a>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+
+    <!-- ── ARTÍCULOS RELACIONADOS ── -->
+    <section class="relacionados">
+      <div class="contenedor">
+        <h2 class="relacionados__titulo">También te puede interesar</h2>
+        <div class="relacionados-grid">
+          <a href="#" class="art-card">
+            <span class="art-card__tag">Diseño</span>
+            <h3 class="art-card__titulo">5 plantillas de infografías financieras para redes sociales</h3>
+            <p class="art-card__desc">Descarga y personaliza estas plantillas probadas que generan más engagement en Instagram y LinkedIn.</p>
+            <div class="art-card__footer">
+              <span><i class="fa-solid fa-clock" style="margin-right:.3rem;"></i> 5 min</span>
+              <span class="art-card__leer">Leer →</span>
+            </div>
+          </a>
+          <a href="#" class="art-card">
+            <span class="art-card__tag" style="background:rgba(255,107,53,0.1);color:var(--primario);">IA</span>
+            <h3 class="art-card__titulo">Los mejores prompts de IA para creadores de contenido en 2025</h3>
+            <p class="art-card__desc">Colección de 50+ prompts listos para usar en generadores de imagen IA, organizados por nicho.</p>
+            <div class="art-card__footer">
+              <span><i class="fa-solid fa-clock" style="margin-right:.3rem;"></i> 6 min</span>
+              <span class="art-card__leer">Leer →</span>
+            </div>
+          </a>
+          <a href="#" class="art-card">
+            <span class="art-card__tag" style="background:rgba(247,201,72,0.1);color:var(--acento);">Tutorial</span>
+            <h3 class="art-card__titulo">Cómo eliminar el fondo de tus fotos con IA en 30 segundos</h3>
+            <p class="art-card__desc">Tutorial paso a paso para usar la herramienta de eliminación de fondo de Pixeo y crear imágenes limpias.</p>
+            <div class="art-card__footer">
+              <span><i class="fa-solid fa-clock" style="margin-right:.3rem;"></i> 4 min</span>
+              <span class="art-card__leer">Leer →</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer" role="contentinfo">
+  <div class="contenedor">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__marca">Pixeo</div>
+        <p class="footer__descripcion">La plataforma de diseño online donde tu creatividad tiene valor.</p>
+        <div class="footer__redes">
+          <a href="https://www.instagram.com/art_philip_studio/" class="footer__red" aria-label="Instagram" target="_blank" rel="noopener" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@artphilipstudio" class="footer__red" aria-label="TikTok" target="_blank" rel="noopener" title="TikTok">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@ArtPhilipStudio" class="footer__red" aria-label="YouTube" target="_blank" rel="noopener" title="YouTube">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.96-1.96C18.88 4 12 4 12 4s-6.88 0-8.58.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.96 1.96C5.12 20 12 20 12 20s6.88 0 8.58-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#181E38"/></svg>
+          </a>
+          <a href="https://wa.me/593968352133" class="footer__red" aria-label="WhatsApp" target="_blank" rel="noopener" title="WhatsApp">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/fernando-tello-dev/" class="footer__red" aria-label="LinkedIn" target="_blank" rel="noopener" title="LinkedIn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" class="footer__red" aria-label="Discord" title="Discord — próximamente" style="opacity:0.5;cursor:default">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-titulo">Herramientas</div>
+        <a href="app.html"                 class="footer__enlace">Editor de fotos</a>
+        <a href="app.html?tab=bg-remove"   class="footer__enlace">Eliminar fondo</a>
+        <a href="app.html?tab=ai-enhance"  class="footer__enlace">Mejorar con IA</a>
+        <a href="app.html?tab=templates"   class="footer__enlace">Plantillas</a>
+      </div>
+      <div>
+        <div class="footer__col-titulo">Empresa</div>
+        <a href="blog/index.html"          class="footer__enlace">Blog</a>
+        <a href="contacto.html"            class="footer__enlace">Contacto</a>
+        <a href="#como-funciona"           class="footer__enlace">Cómo funciona</a>
+      </div>
+      <div>
+        <div class="footer__col-titulo">Legal</div>
+        <a href="privacidad.html"          class="footer__enlace">Privacidad</a>
+        <a href="terminos.html"            class="footer__enlace">Términos de uso</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__copy">© <span id="anio"></span> Pixeo · Art Philip Studio · Quito, EC</div>
+      <div class="footer__legales">
+        <a href="privacidad.html" class="footer__legal">Privacidad</a>
+        <a href="terminos.html"   class="footer__legal">Términos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script>
+    // Navbar scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+
+    // Hamburguesa
+    const hamburguesa = document.getElementById('hamburguesa');
+    const navMenu = document.getElementById('nav-menu');
+    hamburguesa.addEventListener('click', () => {
+      const abierto = navMenu.classList.toggle('abierto');
+      hamburguesa.setAttribute('aria-expanded', abierto);
+      document.body.style.overflow = abierto ? 'hidden' : '';
+    });
+
+    // Fade-up animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Año dinámico
+    document.getElementById('anio').textContent = new Date().getFullYear();
+
+    // Smooth scroll para índice
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href').slice(1);
+        const dest = document.getElementById(id);
+        if (dest) {
+          e.preventDefault();
+          dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

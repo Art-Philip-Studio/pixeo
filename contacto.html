@@ -1,0 +1,2723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor — Pixeo</title>
+  <meta name="description" content="Editor de fotos y diseño online gratis. Crea, edita y exporta imágenes con herramientas profesionales y gana créditos mientras diseñas." />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=2" />
+  <link rel="canonical" href="https://www.pixeo.com/app.html" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* ── LUNA Color Palette Override ── */
+    :root {
+      --luna-1: #A7EBF2;   /* celeste claro — acento principal */
+      --luna-2: #54ACBF;   /* azul medio */
+      --luna-3: #26658C;   /* azul oscuro */
+      --luna-4: #023859;   /* azul marino */
+      --luna-5: #011C40;   /* azul noche */
+      --primario: #A7EBF2;
+      --secundario: #011C40;
+      --superficie: #023859;
+      --superficie2: #26658C;
+      --borde: rgba(167,235,242,0.12);
+      --texto: #E8F8FA;
+      --texto-suave: rgba(167,235,242,0.55);
+      --acento: #F7C948;
+      --radio: 10px;
+      --radio-sm: 6px;
+      --radio-lg: 16px;
+      --transicion: 0.2s ease;
+      --fuente-titulo: 'Syne', sans-serif;
+      --fuente-cuerpo: 'DM Sans', sans-serif;
+    }
+
+    /* ── Reset completo para el editor ── */
+    body { overflow: hidden; height: 100vh; background: var(--luna-5); }
+
+    /* ── TOPBAR estilo Fotor ── */
+    .editor-topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      background: #ffffff;
+      border-bottom: 1px solid #e8eaed;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 1rem;
+      z-index: 200;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .editor-topbar__logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #1a1a2e;
+      text-decoration: none;
+      letter-spacing: -.04em;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      margin-right: .5rem;
+    }
+    .editor-topbar__logo .logo-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #A7EBF2, #26658C);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+    }
+    .editor-topbar__logo span { color: #A7EBF2; }
+
+    /* Nav links Fotor style */
+    .editor-topbar__nav { display: flex; align-items: center; gap: .1rem; }
+    .editor-topbar__nav-link {
+      padding: .38rem .75rem;
+      border-radius: 6px;
+      font-size: .82rem;
+      font-weight: 500;
+      color: #444;
+      transition: all .15s;
+      display: flex; align-items: center; gap: .3rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .editor-topbar__nav-link:hover { background: #f0f0f0; color: #111; }
+    .editor-topbar__nav-link svg { width: 14px; height: 14px; opacity: .6; }
+
+    /* Buscar */
+    .topbar-search {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .32rem .75rem;
+      border-radius: 6px;
+      background: none;
+      border: none;
+      font-size: .82rem;
+      color: #888;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background .15s;
+    }
+    .topbar-search:hover { background: #f0f0f0; }
+    .topbar-search kbd {
+      background: #eee;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: .05rem .35rem;
+      font-size: .7rem;
+      color: #666;
+    }
+
+    .editor-topbar__divider {
+      width: 1px; height: 24px;
+      background: #e0e0e0;
+      flex-shrink: 0;
+      margin: 0 .6rem;
+    }
+
+    .editor-topbar__nombre {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #222;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .875rem;
+      font-weight: 500;
+      outline: none;
+      padding: .3rem .5rem;
+      border-radius: 6px;
+      transition: background .15s;
+      min-width: 0;
+    }
+    .editor-topbar__nombre:hover, .editor-topbar__nombre:focus { background: #f5f5f5; }
+
+    .editor-topbar__acciones {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      margin-left: auto;
+    }
+
+    .creditos-badge {
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .32rem .75rem;
+      background: #fff8e7;
+      border: 1px solid #f7c948;
+      border-radius: 999px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: .78rem;
+      color: #b8860b;
+      cursor: default;
+    }
+
+    .topbar-btn-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #e8eaed;
+      background: #fff;
+      color: #555;
+      cursor: pointer;
+      transition: all .15s;
+      font-size: .85rem;
+    }
+    .topbar-btn-icon:hover { background: #f5f5f5; border-color: #ccc; color: #111; }
+
+    .btn-exportar-top {
+      padding: .4rem 1rem;
+      background: linear-gradient(135deg, #A7EBF2, #54ACBF);
+      color: #011C40;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: .8rem;
+      cursor: pointer;
+      display: flex; align-items: center; gap: .4rem;
+      transition: all .2s;
+      box-shadow: 0 2px 8px rgba(84,172,191,0.3);
+    }
+    .btn-exportar-top:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(84,172,191,0.4); }
+
+    /* ── LAYOUT PRINCIPAL ── */
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 60px 0px 1fr 260px;
+      grid-template-rows: 1fr;
+      height: 100vh;
+      padding-top: 52px;
+      transition: grid-template-columns 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    .editor-layout.panel-abierto {
+      grid-template-columns: 60px 240px 1fr 260px;
+    }
+
+    /* ── BARRA DE ÍCONOS (rail) ── */
+    .panel-rail {
+      background: #080f1e;
+      border-right: 1px solid rgba(167,235,242,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: .5rem 0;
+      gap: .1rem;
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .rail-btn {
+      width: 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .28rem;
+      padding: .55rem 0;
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-radius: 10px;
+      color: rgba(167,235,242,0.45);
+      transition: all 0.18s ease;
+      position: relative;
+      margin: .05rem 0;
+    }
+
+    .rail-btn svg {
+      width: 22px; height: 22px;
+      transition: all 0.18s ease;
+      flex-shrink: 0;
+    }
+
+    .rail-btn span {
+      font-family: var(--fuente-titulo);
+      font-size: .6rem;
+      font-weight: 600;
+      letter-spacing: .03em;
+      line-height: 1;
+    }
+
+    .rail-btn:hover {
+      color: var(--luna-1);
+      background: rgba(167,235,242,0.07);
+    }
+    .rail-btn:hover svg {
+      filter: drop-shadow(0 0 6px rgba(167,235,242,0.6));
+      transform: scale(1.1);
+    }
+
+    .rail-btn.activo {
+      color: var(--luna-1);
+      background: rgba(167,235,242,0.1);
+    }
+    .rail-btn.activo svg {
+      filter: drop-shadow(0 0 8px rgba(167,235,242,0.7));
+    }
+    .rail-btn.activo::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 28px;
+      background: var(--luna-1);
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 8px rgba(167,235,242,0.7);
+    }
+
+    .rail-divider {
+      width: 32px;
+      height: 1px;
+      background: rgba(167,235,242,0.1);
+      margin: .3rem 0;
+    }
+
+    /* ── PANEL EXPANDIDO ── */
+    .panel-izq {
+      background: #0c1829;
+      border-right: 1px solid rgba(167,235,242,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel-izq__header {
+      padding: .9rem 1rem .6rem;
+      font-family: var(--fuente-titulo);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--texto-suave);
+      border-bottom: 1px solid rgba(167,235,242,0.08);
+      flex-shrink: 0;
+    }
+
+    .panel-tabs { display: none; } /* ocultamos tabs horizontales */
+
+    .panel-contenido {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(167,235,242,0.15) transparent;
+    }
+
+    /* Grilla de plantillas / stickers */
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .6rem;
+    }
+
+    .mini-card {
+      aspect-ratio: 1;
+      border-radius: var(--radio-sm);
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      cursor: pointer;
+      transition: all var(--transicion);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-card:hover {
+      border-color: var(--luna-1);
+      box-shadow: 0 0 10px rgba(167,235,242,0.3);
+      transform: scale(1.03);
+    }
+
+    .mini-card__label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.7);
+      font-size: .6rem;
+      padding: .2rem;
+      text-align: center;
+      color: var(--texto-suave);
+      font-family: var(--fuente-titulo);
+    }
+
+    /* Filtros */
+    .filtro-lista { display: flex; flex-direction: column; gap: .5rem; }
+
+    .filtro-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .8rem;
+      color: var(--texto-suave);
+    }
+
+    .filtro-slider {
+      -webkit-appearance: none;
+      width: 110px;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--superficie2);
+      outline: none;
+    }
+    .filtro-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--luna-1);
+      box-shadow: 0 0 6px rgba(167,235,242,0.6);
+      cursor: pointer;
+    }
+
+    /* Herramientas Pro */
+    .pro-lista { display: flex; flex-direction: column; gap: .6rem; }
+
+    .pro-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .75rem;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio);
+      cursor: pointer;
+      transition: all var(--transicion);
+    }
+
+    .pro-item:hover { border-color: rgba(247,201,72,0.3); background: rgba(247,201,72,0.04); }
+
+    .pro-item__icono {
+      width: 36px; height: 36px;
+      background: rgba(247,201,72,0.1);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .pro-item__info { flex: 1; }
+
+    .pro-item__nombre {
+      font-family: var(--fuente-titulo);
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--texto);
+    }
+
+    .pro-item__costo {
+      font-size: .7rem;
+      color: var(--acento);
+    }
+
+    /* Upload area */
+    .upload-area {
+      border: 2px dashed var(--borde);
+      border-radius: var(--radio);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transicion);
+      margin-bottom: 1rem;
+    }
+
+    .upload-area:hover {
+      border-color: var(--primario);
+      background: rgba(255,107,53,0.04);
+    }
+
+    .upload-area__icono { font-size: 2rem; margin-bottom: .5rem; }
+    .upload-area__texto { font-size: .78rem; color: var(--texto-suave); }
+
+    /* Colores */
+    .colores-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-bottom: 1rem;
+    }
+
+    .color-circulo {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform var(--transicion);
+    }
+    .color-circulo:hover { transform: scale(1.2); }
+    .color-circulo.activo { border-color: #fff; }
+
+    /* ── CANVAS CENTRAL ── */
+    .canvas-zona {
+      background: #0a1628;
+      background-image: radial-gradient(circle at 20% 80%, rgba(2,56,89,0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(38,101,140,0.2) 0%, transparent 50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .canvas-toolbar {
+      position: absolute;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(1,28,64,0.92);
+      border: 1px solid rgba(167,235,242,0.18);
+      border-radius: 999px;
+      padding: .4rem .75rem;
+      backdrop-filter: blur(12px);
+      z-index: 10;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(167,235,242,0.08);
+    }
+
+    .canvas-tool {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: none;
+      border: 1px solid transparent;
+      color: var(--texto-suave);
+      position: relative;
+    }
+
+    .canvas-tool:hover {
+      background: rgba(167,235,242,0.1);
+      color: var(--luna-1);
+      box-shadow: 0 0 10px rgba(167,235,242,0.35), 0 0 20px rgba(167,235,242,0.12);
+      border-color: rgba(167,235,242,0.25);
+      transform: scale(1.08);
+    }
+
+    @keyframes toolActivate {
+      0% { box-shadow: 0 0 0 0 rgba(167,235,242,0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(167,235,242,0); }
+      100% { box-shadow: 0 0 12px rgba(167,235,242,0.45); }
+    }
+
+    .canvas-tool.activo {
+      background: rgba(167,235,242,0.18);
+      color: var(--luna-1);
+      border-color: rgba(167,235,242,0.4);
+      animation: toolActivate 0.4s ease forwards;
+    }
+
+    .canvas-tool-sep {
+      width: 1px;
+      height: 20px;
+      background: var(--borde);
+      margin: 0 .2rem;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      cursor: crosshair;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+    }
+
+    #mi-canvas {
+      display: block;
+    }
+
+    .canvas-info {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      background: rgba(1,28,64,0.88);
+      border: 1px solid rgba(167,235,242,0.15);
+      border-radius: 999px;
+      padding: .4rem 1rem;
+      font-size: .75rem;
+      color: var(--texto-suave);
+      font-family: var(--fuente-titulo);
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── PANEL DERECHO: Propiedades ── */
+    .panel-der {
+      background: var(--secundario);
+      border-left: 1px solid var(--borde);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-der__titulo {
+      padding: 1rem 1.2rem;
+      font-family: var(--fuente-titulo);
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--texto-suave);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .panel-der__contenido {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      scrollbar-width: thin;
+    }
+
+    .propiedad {
+      margin-bottom: 1.25rem;
+    }
+
+    .propiedad__label {
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--texto-suave);
+      margin-bottom: .4rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .propiedad__input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio-sm);
+      padding: .55rem .75rem;
+      color: var(--texto);
+      font-family: var(--fuente-cuerpo);
+      font-size: .85rem;
+      outline: none;
+      transition: border-color var(--transicion);
+    }
+    .propiedad__input:focus { border-color: var(--luna-1); box-shadow: 0 0 0 2px rgba(167,235,242,0.15); }
+
+    .propiedad__fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+    }
+
+    .propiedad__color-picker {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .color-preview {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--borde);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .propiedad__range {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--superficie2);
+      outline: none;
+    }
+    .propiedad__range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--luna-1);
+      box-shadow: 0 0 6px rgba(167,235,242,0.6);
+      cursor: pointer;
+    }
+
+    /* Capas */
+    .capas-lista { display: flex; flex-direction: column; gap: .4rem; }
+
+    .capa-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .5rem .75rem;
+      border-radius: var(--radio-sm);
+      font-size: .8rem;
+      color: var(--texto-suave);
+      cursor: pointer;
+      transition: background var(--transicion);
+      user-select: none;
+    }
+
+    .capa-item:hover { background: rgba(255,255,255,0.04); }
+    .capa-item.activa { background: rgba(167,235,242,0.08); color: var(--luna-1); }
+
+    .capa-icono { font-size: .9rem; }
+    .capa-nombre { flex: 1; }
+
+    .btn-icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem;
+      cursor: pointer;
+      transition: background var(--transicion);
+      background: none;
+      border: none;
+      color: var(--texto-suave);
+    }
+    .btn-icon:hover { background: rgba(255,255,255,0.08); color: var(--texto); }
+
+    /* Historial rápido */
+    .historial-fila {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: .75rem;
+    }
+
+    .btn-historial {
+      flex: 1;
+      justify-content: center;
+      opacity: .5;
+    }
+    .btn-historial:not(:disabled) { opacity: 1; }
+
+    /* ── MODAL PRO ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transicion);
+    }
+
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: var(--radio-lg);
+      padding: 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      transform: translateY(20px);
+      transition: transform var(--transicion);
+    }
+
+    .modal-overlay.visible .modal { transform: translateY(0); }
+
+    .modal__icono { font-size: 3rem; margin-bottom: 1rem; }
+    .modal__titulo {
+      font-family: var(--fuente-titulo);
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+    .modal__texto {
+      font-size: .875rem;
+      color: var(--texto-suave);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .modal__costo {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .4rem 1rem;
+      background: rgba(247,201,72,0.1);
+      border: 1px solid rgba(247,201,72,0.25);
+      border-radius: 999px;
+      color: var(--acento);
+      font-family: var(--fuente-titulo);
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+    }
+    .modal__botones {
+      display: flex;
+      gap: .75rem;
+    }
+    .modal__botones .btn { flex: 1; justify-content: center; }
+
+    /* ── RESPONSIVE: layout de editor en móvil ── */
+    @media (max-width: 900px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+      }
+      .panel-izq { height: 200px; overflow-x: auto; }
+      .panel-der { height: 220px; }
+      .panel-izq, .panel-der {
+        flex-direction: row;
+        border: none;
+        border-top: 1px solid var(--borde);
+      }
+      body { overflow: auto; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── TOPBAR estilo Fotor ── -->
+<header class="editor-topbar">
+  <a href="index.html" class="editor-topbar__logo" aria-label="Volver al inicio">
+    <div class="logo-icon">✦</div>
+    Pixeo
+  </a>
+
+  <nav class="editor-topbar__nav" aria-label="Navegación">
+    <a href="#" class="editor-topbar__nav-link">
+      Herramientas
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+    </a>
+    <button class="topbar-search">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+      Buscar
+      <kbd>Ctrl+K</kbd>
+    </button>
+  </nav>
+
+  <div class="editor-topbar__divider"></div>
+
+  <input class="editor-topbar__nombre" type="text" value="Mi diseño sin título" aria-label="Nombre del proyecto" />
+
+  <div class="editor-topbar__acciones">
+    <div class="creditos-badge" title="Tus créditos disponibles">
+      ⭐ <span data-creditos>85</span> créditos
+    </div>
+
+    <button class="topbar-btn-icon" id="btn-deshacer" title="Deshacer (Ctrl+Z)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7v6h6"/><path d="M3 13C5 8 9 5 14 5a9 9 0 110 18 9 9 0 01-8-5"/></svg>
+    </button>
+    <button class="topbar-btn-icon" id="btn-rehacer" title="Rehacer (Ctrl+Y)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 7v6h-6"/><path d="M21 13C19 8 15 5 10 5a9 9 0 100 18 9 9 0 008-5"/></svg>
+    </button>
+
+    <div class="editor-topbar__divider"></div>
+
+    <button class="btn-exportar-top" id="btn-exportar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+      Exportar PNG
+    </button>
+  </div>
+</header>
+
+
+<!-- ── LAYOUT EDITOR ── -->
+<div class="editor-layout">
+
+  <!-- ══ BARRA DE ÍCONOS (rail) ══ -->
+  <nav class="panel-rail" aria-label="Herramientas principales">
+
+    <button class="rail-btn activo" data-rail="ia" aria-label="IA">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/>
+        <path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8z"/>
+      </svg>
+      <span>IA</span>
+    </button>
+
+    <button class="rail-btn" data-rail="agente" aria-label="Agente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="12" cy="12" r="9" opacity=".35"/>
+        <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+      </svg>
+      <span>Agente</span>
+    </button>
+
+    <div class="rail-divider"></div>
+
+    <button class="rail-btn" data-rail="subir" aria-label="Subir imagen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <path d="M21 15l-5-5L5 21"/>
+      </svg>
+      <span>Subir</span>
+    </button>
+
+    <button class="rail-btn" data-rail="ajustar" aria-label="Ajustar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="6" x2="20" y2="6"/>
+        <line x1="4" y1="12" x2="20" y2="12"/>
+        <line x1="4" y1="18" x2="20" y2="18"/>
+        <circle cx="8" cy="6" r="2" fill="currentColor" stroke="none"/>
+        <circle cx="16" cy="12" r="2" fill="currentColor" stroke="none"/>
+        <circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/>
+      </svg>
+      <span>Ajustar</span>
+    </button>
+
+    <button class="rail-btn" data-rail="efectos" aria-label="Efectos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/>
+      </svg>
+      <span>Efectos</span>
+    </button>
+
+    <button class="rail-btn" data-rail="stickers" aria-label="Stickers / Belleza">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+      </svg>
+      <span>Belleza</span>
+    </button>
+
+    <button class="rail-btn" data-rail="plantillas" aria-label="Plantillas / Borde">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      <span>Borde</span>
+    </button>
+
+    <button class="rail-btn" data-rail="texto" aria-label="Texto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <path d="M8 8h8M12 8v8M8 12h4"/>
+      </svg>
+      <span>Texto</span>
+    </button>
+
+    <button class="rail-btn" data-rail="colores" aria-label="Elementos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8" cy="8" r="3"/>
+        <rect x="13" y="5" width="6" height="6" rx="1"/>
+        <path d="M8 13l-3 5h6z"/>
+        <path d="M16 13l-3 5h6z"/>
+      </svg>
+      <span>Elementos</span>
+    </button>
+
+    <div class="rail-divider"></div>
+
+    <button class="rail-btn" data-rail="pro" aria-label="Más herramientas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/>
+      </svg>
+      <span>Más</span>
+    </button>
+
+  </nav>
+
+  <!-- ══ PANEL EXPANDIDO ══ -->
+  <aside class="panel-izq" aria-label="Herramientas">
+
+    <div class="panel-izq__header" id="panel-titulo">IA Generativa</div>
+
+    <!-- Tabs (ocultos, controlados por rail) -->
+    <div class="panel-tabs" role="tablist"></div>
+
+    <!-- Contenido de tabs -->
+    <div class="panel-contenido">
+
+      <!-- IA Generativa -->
+      <div data-panel="ia">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.75rem">Herramientas de IA avanzadas</p>
+        <div class="pro-lista">
+          <div class="pro-item" data-pro-tool="ai-generate" data-costo="20">
+            <div class="pro-item__icono">🤖</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Generar imagen con IA</div>
+              <div class="pro-item__costo">⭐ 20 créditos</div>
+            </div>
+          </div>
+          <div class="pro-item" data-pro-tool="bg-remove" data-costo="10">
+            <div class="pro-item__icono">✂️</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Eliminar fondo</div>
+              <div class="pro-item__costo">⭐ 10 créditos</div>
+            </div>
+          </div>
+          <div class="pro-item" data-pro-tool="ai-enhance" data-costo="15">
+            <div class="pro-item__icono">🪄</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Mejorar con IA</div>
+              <div class="pro-item__costo">⭐ 15 créditos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agente -->
+      <div data-panel="agente" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.75rem">Agente de diseño automático</p>
+        <div class="pro-item" style="flex-direction:column;align-items:flex-start;gap:.5rem">
+          <div style="font-size:.8rem;color:var(--texto)">Describe tu diseño y el agente lo creará por ti</div>
+          <textarea style="width:100%;height:80px;background:rgba(255,255,255,0.04);border:1px solid var(--borde);border-radius:var(--radio-sm);padding:.5rem;color:var(--texto);font-size:.8rem;resize:none;outline:none;font-family:var(--fuente-cuerpo)" placeholder="Ej: portada de álbum con fondo azul oscuro..."></textarea>
+          <button class="btn btn-primario btn-sm" style="width:100%;justify-content:center;background:var(--luna-1);color:var(--luna-5);font-weight:700;border:none">✨ Generar diseño</button>
+        </div>
+      </div>
+
+      <!-- Ajustar (filtros) -->
+      <div data-panel="ajustar" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:1rem">Ajusta los filtros de la imagen</p>
+        <div class="filtro-lista">
+          <div class="filtro-item"><span>Brillo</span><input type="range" class="filtro-slider" data-filtro="brightness" min="0" max="200" value="100"/></div>
+          <div class="filtro-item"><span>Contraste</span><input type="range" class="filtro-slider" data-filtro="contrast" min="0" max="200" value="100"/></div>
+          <div class="filtro-item"><span>Saturación</span><input type="range" class="filtro-slider" data-filtro="saturate" min="0" max="200" value="100"/></div>
+          <div class="filtro-item"><span>Opacidad</span><input type="range" class="filtro-slider" data-filtro="opacity" min="0" max="100" value="100"/></div>
+          <div class="filtro-item"><span>Desenfoque</span><input type="range" class="filtro-slider" data-filtro="blur" min="0" max="20" value="0"/></div>
+          <div class="filtro-item"><span>Sepia</span><input type="range" class="filtro-slider" data-filtro="sepia" min="0" max="100" value="0"/></div>
+          <div class="filtro-item"><span>Gris</span><input type="range" class="filtro-slider" data-filtro="grayscale" min="0" max="100" value="0"/></div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-reset-filtros" style="width:100%;justify-content:center;margin-top:1rem">Resetear filtros</button>
+      </div>
+
+      <!-- Plantillas / Borde -->
+      <div data-panel="plantillas" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.75rem">Haz clic para aplicar una plantilla</p>
+        <div class="mini-grid">
+          <div class="mini-card" data-plantilla="sunset" style="background:linear-gradient(135deg,#ff6b35,#f7c948)">
+            🌅<div class="mini-card__label">Atardecer</div>
+          </div>
+          <div class="mini-card" data-plantilla="ocean" style="background:linear-gradient(135deg,#0f3460,#4ecdc4)">
+            🌊<div class="mini-card__label">Océano</div>
+          </div>
+          <div class="mini-card" data-plantilla="noche" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+            ✨<div class="mini-card__label">Noche</div>
+          </div>
+          <div class="mini-card" data-plantilla="naturaleza" style="background:linear-gradient(135deg,#1a3a1a,#4ecdc4)">
+            🌿<div class="mini-card__label">Naturaleza</div>
+          </div>
+          <div class="mini-card" data-plantilla="fuego" style="background:linear-gradient(135deg,#8b0000,#ff6b35)">
+            🔥<div class="mini-card__label">Fuego</div>
+          </div>
+          <div class="mini-card" data-plantilla="galaxia" style="background:linear-gradient(135deg,#0d0d2b,#6c3a9e)">
+            🌌<div class="mini-card__label">Galaxia</div>
+          </div>
+          <div class="mini-card" data-plantilla="minimalista" style="background:#f5f5f0">
+            ◻️<div class="mini-card__label">Minimal</div>
+          </div>
+          <div class="mini-card" data-plantilla="tropical" style="background:linear-gradient(135deg,#ff9a56,#ff6b9d)">
+            🌴<div class="mini-card__label">Tropical</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subir imagen -->
+      <div data-panel="subir" style="display:none">
+        <label class="upload-area" for="input-imagen">
+          <div class="upload-area__icono">📁</div>
+          <div class="upload-area__texto">
+            Haz clic o arrastra tu imagen aquí<br />
+            <strong style="color:var(--primario)">JPG, PNG, WebP</strong> · Máx. 10 MB
+          </div>
+        </label>
+        <input type="file" id="input-imagen" accept="image/*" style="display:none" />
+        <p style="font-size:.72rem;color:var(--texto-suave)">Tu imagen se procesa en tu navegador — nunca se sube a ningún servidor.</p>
+      </div>
+
+      <!-- Texto -->
+      <div data-panel="texto" style="display:none">
+
+        <!-- Estilos rápidos de texto -->
+        <p style="font-size:.72rem;color:var(--texto-suave);margin-bottom:.6rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600">Agregar texto</p>
+        <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.2rem">
+          <button class="texto-preset" data-agregar-texto="titulo"
+            style="padding:.75rem;background:rgba(167,235,242,0.06);border:1px solid rgba(167,235,242,0.12);border-radius:8px;cursor:pointer;text-align:left;transition:all .18s">
+            <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#E8F8FA;line-height:1.1">Agregar título</div>
+            <div style="font-size:.68rem;color:var(--texto-suave);margin-top:.2rem">Grande · 64px · Bold</div>
+          </button>
+          <button class="texto-preset" data-agregar-texto="subtitulo"
+            style="padding:.75rem;background:rgba(167,235,242,0.04);border:1px solid rgba(167,235,242,0.1);border-radius:8px;cursor:pointer;text-align:left;transition:all .18s">
+            <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#B0D8E0;line-height:1.1">Agregar subtítulo</div>
+            <div style="font-size:.68rem;color:var(--texto-suave);margin-top:.2rem">Mediano · 40px · Semibold</div>
+          </button>
+          <button class="texto-preset" data-agregar-texto="cuerpo"
+            style="padding:.75rem;background:rgba(167,235,242,0.03);border:1px solid rgba(167,235,242,0.08);border-radius:8px;cursor:pointer;text-align:left;transition:all .18s">
+            <div style="font-size:.88rem;color:#88B0BA;line-height:1.3">Agregar cuerpo de texto</div>
+            <div style="font-size:.68rem;color:var(--texto-suave);margin-top:.2rem">Normal · 24px · Regular</div>
+          </button>
+        </div>
+
+        <div style="border-top:1px solid rgba(167,235,242,0.1);margin-bottom:1rem"></div>
+
+        <!-- Editor de texto seleccionado -->
+        <p style="font-size:.72rem;color:var(--texto-suave);margin-bottom:.6rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600">Editar texto seleccionado</p>
+
+        <div id="editor-texto-panel">
+          <textarea id="texto-contenido"
+            style="width:100%;min-height:70px;background:rgba(255,255,255,0.04);border:1px solid rgba(167,235,242,0.18);border-radius:8px;padding:.6rem;color:#E8F8FA;font-size:.85rem;resize:vertical;outline:none;font-family:'DM Sans',sans-serif;line-height:1.5;margin-bottom:.7rem"
+            placeholder="Selecciona un texto en el canvas para editar..."></textarea>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem">
+            <div>
+              <div style="font-size:.7rem;color:var(--texto-suave);margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center">
+                <span>Tamaño</span>
+                <span id="texto-tamano-val" style="font-weight:700;color:#A7EBF2;font-size:.82rem">36px</span>
+              </div>
+              <input type="range" id="texto-tamano" value="36" min="8" max="200" step="1"
+                style="width:100%;height:4px;accent-color:#A7EBF2;cursor:pointer;margin-top:.2rem">
+            </div>
+            <div>
+              <div style="font-size:.7rem;color:var(--texto-suave);margin-bottom:.3rem">Peso</div>
+              <select id="texto-peso"
+                style="width:100%;background:#0c1829;border:1px solid rgba(167,235,242,0.15);border-radius:6px;padding:.4rem .5rem;color:#E8F8FA;font-size:.82rem;outline:none;cursor:pointer">
+                <option value="400">Regular</option>
+                <option value="600">Semibold</option>
+                <option value="700" selected>Bold</option>
+                <option value="800">ExtraBold</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom:.6rem">
+            <div style="font-size:.7rem;color:var(--texto-suave);margin-bottom:.3rem">Fuente</div>
+            <select id="texto-fuente"
+              style="width:100%;background:#0c1829;border:1px solid rgba(167,235,242,0.15);border-radius:6px;padding:.4rem .5rem;color:#E8F8FA;font-size:.82rem;outline:none;cursor:pointer">
+              <option value="Syne, sans-serif">Syne (Display)</option>
+              <option value="DM Sans, sans-serif">DM Sans (Cuerpo)</option>
+              <option value="Georgia, serif">Georgia (Serif)</option>
+              <option value="Courier New, monospace">Courier New (Mono)</option>
+              <option value="Arial, sans-serif">Arial</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:.8rem">
+            <div style="font-size:.7rem;color:var(--texto-suave);margin-bottom:.4rem;display:flex;align-items:center;justify-content:space-between">
+              <span>Color del texto</span>
+              <div style="display:flex;align-items:center;gap:.35rem">
+                <div id="texto-color-preview" style="width:18px;height:18px;border-radius:4px;background:#ffffff;border:1.5px solid rgba(167,235,242,0.35);flex-shrink:0"></div>
+                <span id="texto-color-hex" style="font-size:.68rem;color:var(--luna-1);font-family:'Syne',sans-serif;font-weight:600">#FFFFFF</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.4rem;align-items:center">
+              <div class="color-texto-rapido" data-color="#FFFFFF" style="width:24px;height:24px;border-radius:50%;background:#fff;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Blanco"></div>
+              <div class="color-texto-rapido" data-color="#A7EBF2" style="width:24px;height:24px;border-radius:50%;background:#A7EBF2;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Celeste"></div>
+              <div class="color-texto-rapido" data-color="#F7C948" style="width:24px;height:24px;border-radius:50%;background:#F7C948;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Dorado"></div>
+              <div class="color-texto-rapido" data-color="#FF6B35" style="width:24px;height:24px;border-radius:50%;background:#FF6B35;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Naranja"></div>
+              <div class="color-texto-rapido" data-color="#4ECDC4" style="width:24px;height:24px;border-radius:50%;background:#4ECDC4;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Turquesa"></div>
+              <div class="color-texto-rapido" data-color="#e74c3c" style="width:24px;height:24px;border-radius:50%;background:#e74c3c;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Rojo"></div>
+              <div class="color-texto-rapido" data-color="#000000" style="width:24px;height:24px;border-radius:50%;background:#000;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0" title="Negro"></div>
+              <label style="width:24px;height:24px;border-radius:50%;border:2px dashed rgba(167,235,242,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;transition:border-color .15s" title="Color personalizado">
+                <span style="font-size:.65rem;color:var(--texto-suave);pointer-events:none">＋</span>
+                <input type="color" id="texto-color-pick" value="#ffffff" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" title="Color personalizado">
+              </label>
+            </div>
+          </div>
+
+          <button id="btn-aplicar-texto"
+            style="width:100%;padding:.55rem;background:linear-gradient(135deg,#A7EBF2,#54ACBF);color:#011C40;border:none;border-radius:8px;font-weight:700;font-family:'Syne',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s">
+            ✓ Aplicar cambios
+          </button>
+        </div>
+      </div>
+
+      <!-- Stickers -->
+      <div data-panel="stickers" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.75rem">Haz clic para agregar al canvas</p>
+        <div class="mini-grid">
+          <div class="mini-card" data-sticker="🌟">🌟</div>
+          <div class="mini-card" data-sticker="💫">💫</div>
+          <div class="mini-card" data-sticker="🎨">🎨</div>
+          <div class="mini-card" data-sticker="🚀">🚀</div>
+          <div class="mini-card" data-sticker="🦋">🦋</div>
+          <div class="mini-card" data-sticker="🌈">🌈</div>
+          <div class="mini-card" data-sticker="💎">💎</div>
+          <div class="mini-card" data-sticker="🎭">🎭</div>
+          <div class="mini-card" data-sticker="🔥">🔥</div>
+          <div class="mini-card" data-sticker="⚡">⚡</div>
+          <div class="mini-card" data-sticker="🌸">🌸</div>
+          <div class="mini-card" data-sticker="🎯">🎯</div>
+        </div>
+      </div>
+
+      <!-- Efectos (filtros visuales) -->
+      <div data-panel="efectos" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:1rem">Efectos visuales del canvas</p>
+        <div class="filtro-lista">
+          <div class="filtro-item"><span>Brillo</span><input type="range" class="filtro-slider" data-filtro="brightness" min="0" max="200" value="100"/></div>
+          <div class="filtro-item"><span>Contraste</span><input type="range" class="filtro-slider" data-filtro="contrast" min="0" max="200" value="100"/></div>
+          <div class="filtro-item"><span>Saturación</span><input type="range" class="filtro-slider" data-filtro="saturate" min="0" max="200" value="100"/></div>
+          <div class="filtro-item"><span>Opacidad</span><input type="range" class="filtro-slider" data-filtro="opacity" min="0" max="100" value="100"/></div>
+          <div class="filtro-item"><span>Desenfoque</span><input type="range" class="filtro-slider" data-filtro="blur" min="0" max="20" value="0"/></div>
+          <div class="filtro-item"><span>Sepia</span><input type="range" class="filtro-slider" data-filtro="sepia" min="0" max="100" value="0"/></div>
+          <div class="filtro-item"><span>Gris</span><input type="range" class="filtro-slider" data-filtro="grayscale" min="0" max="100" value="0"/></div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-reset-filtros2" style="width:100%;justify-content:center;margin-top:1rem">Resetear filtros</button>
+      </div>
+
+      <!-- Color de fondo -->
+      <div data-panel="colores" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.5rem">Paleta LUNA</p>
+        <div class="colores-grid" style="margin-bottom:.75rem">
+          <div class="color-circulo" style="background:#A7EBF2;box-shadow:0 0 8px rgba(167,235,242,0.5)" data-color="#A7EBF2" title="#A7EBF2"></div>
+          <div class="color-circulo" style="background:#54ACBF" data-color="#54ACBF" title="#54ACBF"></div>
+          <div class="color-circulo" style="background:#26658C" data-color="#26658C" title="#26658C"></div>
+          <div class="color-circulo" style="background:#023859" data-color="#023859" title="#023859"></div>
+          <div class="color-circulo" style="background:#011C40" data-color="#011C40" title="#011C40"></div>
+        </div>
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.5rem">Más colores</p>
+        <div class="colores-grid">
+          <div class="color-circulo" style="background:#0F0F1A" data-color="#0F0F1A"></div>
+          <div class="color-circulo" style="background:#1A1A2E" data-color="#1A1A2E"></div>
+          <div class="color-circulo" style="background:#FF6B35" data-color="#FF6B35"></div>
+          <div class="color-circulo" style="background:#F7C948" data-color="#F7C948"></div>
+          <div class="color-circulo" style="background:#4ECDC4" data-color="#4ECDC4"></div>
+          <div class="color-circulo" style="background:#ffffff" data-color="#ffffff"></div>
+          <div class="color-circulo" style="background:#000000;border:1px solid var(--borde)" data-color="#000000"></div>
+          <div class="color-circulo" style="background:#e74c3c" data-color="#e74c3c"></div>
+          <div class="color-circulo" style="background:#2ecc71" data-color="#2ecc71"></div>
+          <div class="color-circulo" style="background:#3498db" data-color="#3498db"></div>
+          <div class="color-circulo" style="background:#9b59b6" data-color="#9b59b6"></div>
+          <div class="color-circulo" style="background:linear-gradient(135deg,#A7EBF2,#011C40);background-color:#A7EBF2" data-gradient="linear-gradient(135deg, #A7EBF2, #011C40)"></div>
+        </div>
+        <div style="margin-top:.75rem">
+          <div class="propiedad__label">Color personalizado</div>
+          <input type="color" id="color-custom" value="#023859"
+            style="width:100%;height:40px;border:1px solid var(--borde);border-radius:var(--radio-sm);background:none;cursor:pointer" />
+        </div>
+      </div>
+
+      <!-- Herramientas Pro -->
+      <div data-panel="pro" style="display:none">
+        <p style="font-size:.75rem;color:var(--texto-suave);margin-bottom:.75rem">Usa créditos para acceder a herramientas avanzadas</p>
+        <div class="pro-lista">
+          <div class="pro-item" data-pro-tool="bg-remove" data-costo="10">
+            <div class="pro-item__icono">✂️</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Eliminar fondo</div>
+              <div class="pro-item__costo">⭐ 10 créditos</div>
+            </div>
+          </div>
+          <div class="pro-item" data-pro-tool="ai-enhance" data-costo="15">
+            <div class="pro-item__icono">🪄</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Mejorar con IA</div>
+              <div class="pro-item__costo">⭐ 15 créditos</div>
+            </div>
+          </div>
+          <div class="pro-item" data-pro-tool="ai-generate" data-costo="20">
+            <div class="pro-item__icono">🤖</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Generar imagen con IA</div>
+              <div class="pro-item__costo">⭐ 20 créditos</div>
+            </div>
+          </div>
+          <div class="pro-item" data-pro-tool="hd-export" data-costo="8">
+            <div class="pro-item__icono">🖥️</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Exportar en HD 4K</div>
+              <div class="pro-item__costo">⭐ 8 créditos</div>
+            </div>
+          </div>
+          <div class="pro-item" data-pro-tool="video-export" data-costo="30">
+            <div class="pro-item__icono">🎬</div>
+            <div class="pro-item__info">
+              <div class="pro-item__nombre">Exportar a video</div>
+              <div class="pro-item__costo">⭐ 30 créditos</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;padding:1rem;background:rgba(247,201,72,0.06);border:1px solid rgba(247,201,72,0.15);border-radius:var(--radio);font-size:.75rem;color:var(--texto-suave);line-height:1.6">
+          💡 <strong style="color:var(--acento)">Gana créditos gratis:</strong> 1 crédito por minuto de uso, 5 por diseño guardado, 10 por compartir.
+        </div>
+      </div>
+
+    </div><!-- /panel-contenido -->
+  </aside>
+
+
+  <!-- ══ CANVAS CENTRAL ══ -->
+  <main class="canvas-zona" aria-label="Área de diseño">
+
+    <!-- Toolbar flotante -->
+    <div class="canvas-toolbar" role="toolbar" aria-label="Herramientas del canvas">
+      <button class="canvas-tool activo" data-herramienta="seleccionar" title="Seleccionar (V)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 2l10 5.5-5 1.5-2 5z"/>
+        </svg>
+      </button>
+      <button class="canvas-tool" data-herramienta="mover" title="Mover (M)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M8 2v12M2 8h12M5 5L2 8l3 3M11 5l3 3-3 3M5 11L2 8M11 5l3 3"/>
+        </svg>
+      </button>
+      <div class="canvas-tool-sep"></div>
+      <button class="canvas-tool" data-herramienta="texto" title="Texto (T)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M2 3h12v2H9v8H7V5H2V3z"/>
+        </svg>
+      </button>
+      <button class="canvas-tool" data-herramienta="forma" title="Forma (R)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2" y="4" width="12" height="8" rx="1"/>
+        </svg>
+      </button>
+      <div class="canvas-tool-sep"></div>
+      <button class="canvas-tool" data-herramienta="recortar" title="Recortar (C)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 2v10h10M2 4h10v10"/>
+        </svg>
+      </button>
+      <div class="canvas-tool-sep"></div>
+      <select id="zoom-select" style="background:rgba(1,28,64,0.8);border:1px solid rgba(167,235,242,0.2);color:var(--texto);font-family:var(--fuente-titulo);font-size:.75rem;border-radius:6px;padding:.25rem .5rem;cursor:pointer;outline:none">
+        <option value="0.5">50%</option>
+        <option value="0.75">75%</option>
+        <option value="1" selected>100%</option>
+        <option value="1.25">125%</option>
+        <option value="1.5">150%</option>
+      </select>
+    </div>
+
+    <!-- Canvas HTML5 -->
+    <div class="canvas-wrapper" id="canvas-wrapper">
+      <canvas id="mi-canvas" width="800" height="600"></canvas>
+    </div>
+
+    <!-- Info inferior -->
+    <div class="canvas-info">
+      <span id="canvas-dimensiones">800 × 600 px</span>
+      <span style="color:var(--borde)">|</span>
+      <span id="canvas-zoom-label">100%</span>
+      <span style="color:var(--borde)">|</span>
+      <span id="canvas-objetos">0 objetos</span>
+    </div>
+
+  </main>
+
+
+  <!-- ══ PANEL DERECHO: Propiedades ══ -->
+  <aside class="panel-der" aria-label="Propiedades del objeto">
+
+    <div class="panel-der__titulo">Propiedades</div>
+
+    <div class="panel-der__contenido">
+
+      <!-- Dimensiones del canvas -->
+      <div class="propiedad">
+        <div class="propiedad__label">Tamaño del diseño</div>
+        <div class="propiedad__fila">
+          <input class="propiedad__input" type="number" id="canvas-w" value="800" min="100" max="4000" aria-label="Ancho" />
+          <input class="propiedad__input" type="number" id="canvas-h" value="600" min="100" max="4000" aria-label="Alto" />
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-aplicar-tam" style="width:100%;justify-content:center;margin-top:.5rem">
+          Aplicar tamaño
+        </button>
+      </div>
+
+      <div style="border-top:1px solid var(--borde);margin:1rem 0"></div>
+
+      <!-- Presets de tamaño -->
+      <div class="propiedad">
+        <div class="propiedad__label">Presets</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem">
+          <button class="btn btn-outline btn-sm" data-preset="1080,1080" style="width:100%;justify-content:space-between">
+            <span>Instagram cuadrado</span><span style="color:var(--texto-suave)">1080×1080</span>
+          </button>
+          <button class="btn btn-outline btn-sm" data-preset="1080,1920" style="width:100%;justify-content:space-between">
+            <span>Story / Reel</span><span style="color:var(--texto-suave)">1080×1920</span>
+          </button>
+          <button class="btn btn-outline btn-sm" data-preset="1200,628" style="width:100%;justify-content:space-between">
+            <span>Facebook / OG</span><span style="color:var(--texto-suave)">1200×628</span>
+          </button>
+          <button class="btn btn-outline btn-sm" data-preset="1280,720" style="width:100%;justify-content:space-between">
+            <span>YouTube thumbnail</span><span style="color:var(--texto-suave)">1280×720</span>
+          </button>
+          <button class="btn btn-outline btn-sm" data-preset="800,600" style="width:100%;justify-content:space-between">
+            <span>Personalizado</span><span style="color:var(--texto-suave)">800×600</span>
+          </button>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--borde);margin:1rem 0"></div>
+
+      <!-- Propiedades del objeto seleccionado -->
+      <div id="panel-objeto" style="display:none">
+        <div class="propiedad">
+          <div class="propiedad__label">Posición</div>
+          <div class="propiedad__fila">
+            <input class="propiedad__input" type="number" id="obj-x" placeholder="X" />
+            <input class="propiedad__input" type="number" id="obj-y" placeholder="Y" />
+          </div>
+        </div>
+        <div class="propiedad">
+          <div class="propiedad__label">Tamaño del objeto</div>
+          <div class="propiedad__fila">
+            <input class="propiedad__input" type="number" id="obj-w" placeholder="Ancho" />
+            <input class="propiedad__input" type="number" id="obj-h" placeholder="Alto" />
+          </div>
+        </div>
+        <div class="propiedad">
+          <div class="propiedad__label">Rotación</div>
+          <input type="range" class="propiedad__range" id="obj-rotacion" min="-180" max="180" value="0" />
+          <span id="obj-rotacion-val" style="font-size:.75rem;color:var(--texto-suave)">0°</span>
+        </div>
+        <div class="propiedad">
+          <div class="propiedad__label">Color / texto</div>
+          <div class="propiedad__color-picker">
+            <div class="color-preview" id="obj-color-preview" style="background:#ffffff"></div>
+            <input class="propiedad__input" type="color" id="obj-color" value="#ffffff" style="flex:1;height:34px;padding:.2rem" />
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn btn-outline btn-sm" id="btn-obj-arriba" style="flex:1;justify-content:center" title="Subir capa">↑ Arriba</button>
+          <button class="btn btn-outline btn-sm" id="btn-obj-abajo"  style="flex:1;justify-content:center" title="Bajar capa">↓ Abajo</button>
+        </div>
+        <button class="btn btn-sm" id="btn-eliminar-obj"
+          style="width:100%;justify-content:center;margin-top:.5rem;background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid rgba(231,76,60,0.2)">
+          🗑 Eliminar objeto
+        </button>
+      </div>
+
+      <div style="border-top:1px solid var(--borde);margin:1rem 0"></div>
+
+      <!-- Capas -->
+      <div class="propiedad">
+        <div class="propiedad__label">Capas</div>
+        <div class="capas-lista" id="capas-lista">
+          <div style="font-size:.75rem;color:var(--texto-suave);text-align:center;padding:.75rem">
+            Sin objetos aún
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-der__contenido -->
+  </aside>
+
+</div><!-- /editor-layout -->
+
+
+<!-- ── MODAL PRO ── -->
+<div class="modal-overlay" id="modal-pro" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+  <div class="modal">
+    <div class="modal__icono" id="modal-icono">⚡</div>
+    <div class="modal__titulo" id="modal-titulo">Herramienta Pro</div>
+    <div class="modal__texto" id="modal-texto">Esta herramienta requiere créditos.</div>
+    <div class="modal__costo" id="modal-costo">⭐ 10 créditos</div>
+    <div class="modal__botones">
+      <button class="btn btn-outline" id="modal-cancelar">Cancelar</button>
+      <button class="btn btn-acento" id="modal-confirmar">Usar créditos</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="assets/js/config-sitio.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+// ============================================================
+//  app.js (inline) — Lógica del editor Pixeo
+// ============================================================
+
+const canvas  = document.getElementById('mi-canvas');
+const ctx     = canvas.getContext('2d');
+
+// Estado global del editor
+const estado = {
+  fondo:      '#0F0F1A',
+  gradiente:  null,
+  filtros:    { brightness:100, contrast:100, saturate:100, opacity:100, blur:0, sepia:0, grayscale:0 },
+  objetos:    [],         // { tipo, x, y, w, h, texto, emoji, color, rot, imagen }
+  seleccion:  null,       // índice del objeto seleccionado
+  arrastrar:  false,
+  offsetX:    0,
+  offsetY:    0,
+  zoom:       1,
+  herramienta:'seleccionar',
+  historial:  [],         // snapshots de estado para deshacer
+  indexHist:  -1,
+};
+
+// ── ESTADO DE RECORTE ────────────────────────────────────────
+const crop = {
+  activo:    false,   // si el modo crop está activado
+  x: 0, y: 0,        // posición del área de recorte en el canvas
+  w: 0, h: 0,        // tamaño del área de recorte
+  objIdx:    null,    // índice del objeto imagen que se está recortando
+  arrastrando: false, // si está moviendo el área
+  manija:    null,    // qué esquina se está arrastrando: 'tl','tr','bl','br'
+  startX: 0, startY: 0,
+  startCrop: null,
+};
+
+function cropManijaCercana(x, y) {
+  if (!crop.activo) return null;
+  const MS = 14;
+  const esquinas = {
+    tl: { x: crop.x,          y: crop.y },
+    tr: { x: crop.x + crop.w, y: crop.y },
+    bl: { x: crop.x,          y: crop.y + crop.h },
+    br: { x: crop.x + crop.w, y: crop.y + crop.h },
+  };
+  for (const [key, p] of Object.entries(esquinas)) {
+    if (Math.abs(x - p.x) <= MS && Math.abs(y - p.y) <= MS) return key;
+  }
+  return null;
+}
+
+function activarCrop() {
+  if (estado.seleccion === null) {
+    mostrarToast('Selecciona una imagen primero ✂️', 'error');
+    return;
+  }
+  const obj = estado.objetos[estado.seleccion];
+  if (obj.tipo !== 'imagen') {
+    mostrarToast('El recorte solo funciona en imágenes 🖼️', 'error');
+    return;
+  }
+  crop.activo  = true;
+  crop.objIdx  = estado.seleccion;
+  crop.x = obj.x;
+  crop.y = obj.y;
+  crop.w = obj.w;
+  crop.h = obj.h;
+  mostrarBarraCrop();
+  render();
+  mostrarToast('Arrastra las esquinas para recortar ✂️', 'info');
+}
+
+function confirmarCrop() {
+  if (!crop.activo || crop.objIdx === null) return;
+  const obj = estado.objetos[crop.objIdx];
+
+  // Calcular coordenadas relativas a la imagen original
+  const escalaX = obj.imagen.naturalWidth  / obj.w;
+  const escalaY = obj.imagen.naturalHeight / obj.h;
+  const sx = (crop.x - obj.x) * escalaX;
+  const sy = (crop.y - obj.y) * escalaY;
+  const sw = crop.w * escalaX;
+  const sh = crop.h * escalaY;
+
+  // Dibujar en canvas offscreen
+  const off = document.createElement('canvas');
+  off.width  = Math.max(1, Math.round(sw));
+  off.height = Math.max(1, Math.round(sh));
+  const octx = off.getContext('2d');
+  octx.drawImage(obj.imagen, sx, sy, sw, sh, 0, 0, off.width, off.height);
+
+  const nuevaImg = new Image();
+  nuevaImg.onload = () => {
+    obj.imagen = nuevaImg;
+    obj.x = crop.x;
+    obj.y = crop.y;
+    obj.w = crop.w;
+    obj.h = crop.h;
+    cancelarCrop();
+    guardarHistorial();
+    render();
+    mostrarToast('Recorte aplicado ✓', 'exito');
+  };
+  nuevaImg.src = off.toDataURL();
+}
+
+function cancelarCrop() {
+  crop.activo  = false;
+  crop.objIdx  = null;
+  crop.manija  = null;
+  crop.arrastrando = false;
+  ocultarBarraCrop();
+  // Volver a herramienta seleccionar
+  estado.herramienta = 'seleccionar';
+  canvas.style.cursor = 'default';
+  document.querySelectorAll('.canvas-tool').forEach(b => b.classList.remove('activo'));
+  document.querySelector('[data-herramienta="seleccionar"]').classList.add('activo');
+  render();
+}
+
+function mostrarBarraCrop() {
+  let barra = document.getElementById('crop-barra');
+  if (!barra) {
+    barra = document.createElement('div');
+    barra.id = 'crop-barra';
+    barra.style.cssText = `
+      position:absolute; bottom:3.5rem; left:50%; transform:translateX(-50%);
+      display:flex; gap:.5rem; align-items:center;
+      background:rgba(1,28,64,0.95); border:1px solid rgba(167,235,242,0.3);
+      border-radius:999px; padding:.4rem .85rem; z-index:20;
+      backdrop-filter:blur(10px); box-shadow:0 4px 20px rgba(0,0,0,0.4);
+      font-family:'Syne',sans-serif; font-size:.8rem;
+    `;
+    barra.innerHTML = `
+      <span style="color:rgba(167,235,242,0.7);margin-right:.2rem">✂️ Recortando</span>
+      <button id="btn-crop-ok"
+        style="padding:.3rem .9rem;background:linear-gradient(135deg,#A7EBF2,#54ACBF);color:#011C40;border:none;border-radius:999px;font-weight:700;cursor:pointer;font-size:.8rem">
+        ✓ Aplicar
+      </button>
+      <button id="btn-crop-cancel"
+        style="padding:.3rem .9rem;background:rgba(255,255,255,0.07);color:#E8F8FA;border:1px solid rgba(167,235,242,0.2);border-radius:999px;cursor:pointer;font-size:.8rem">
+        ✕ Cancelar
+      </button>
+    `;
+    document.querySelector('.canvas-zona').appendChild(barra);
+    document.getElementById('btn-crop-ok').addEventListener('click', confirmarCrop);
+    document.getElementById('btn-crop-cancel').addEventListener('click', cancelarCrop);
+  }
+  barra.style.display = 'flex';
+}
+
+function ocultarBarraCrop() {
+  const barra = document.getElementById('crop-barra');
+  if (barra) barra.style.display = 'none';
+}
+
+// ── RENDERIZADO ──────────────────────────────────────────────
+function render() {
+  ctx.save();
+
+  // Fondo
+  if (estado.gradiente) {
+    const gr = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    // Parsear dos colores del gradiente linear
+    const m = estado.gradiente.match(/#[0-9a-fA-F]{6}/g);
+    if (m && m.length >= 2) {
+      gr.addColorStop(0, m[0]);
+      gr.addColorStop(1, m[1]);
+    }
+    ctx.fillStyle = gr;
+  } else {
+    ctx.fillStyle = estado.fondo;
+  }
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Objetos
+  estado.objetos.forEach((obj, idx) => {
+    ctx.save();
+
+    const cx = obj.x + obj.w / 2;
+    const cy = obj.y + obj.h / 2;
+    ctx.translate(cx, cy);
+    if (obj.rot) ctx.rotate((obj.rot * Math.PI) / 180);
+    ctx.translate(-cx, -cy);
+
+    if (obj.tipo === 'imagen') {
+      ctx.drawImage(obj.imagen, obj.x, obj.y, obj.w, obj.h);
+    } else if (obj.tipo === 'forma') {
+      ctx.fillStyle = obj.color || '#A7EBF2';
+      ctx.globalAlpha = obj.opacidad || 1;
+      if (obj.forma === 'circulo') {
+        ctx.beginPath();
+        ctx.ellipse(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, obj.h/2, 0, 0, Math.PI*2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.roundRect(obj.x, obj.y, obj.w, obj.h, 6);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    } else if (obj.tipo === 'sticker') {
+      ctx.font = `${Math.min(obj.w, obj.h)}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(obj.emoji, obj.x + obj.w / 2, obj.y + obj.h / 2);
+    } else if (obj.tipo === 'texto') {
+      ctx.fillStyle = obj.color || '#ffffff';
+      ctx.font = `${obj.peso || 'bold'} ${obj.tamano || 36}px ${obj.fuente || 'Syne, sans-serif'}`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      // Soporte multi-línea (Enter en el textarea)
+      const lineas = (obj.texto || '').split('\n');
+      const lineH  = (obj.tamano || 36) * 1.25;
+      lineas.forEach((linea, li) => {
+        ctx.fillText(linea, obj.x, obj.y + li * lineH);
+      });
+      // Ajustar alto del objeto según número de líneas
+      obj.h = Math.max(lineH * lineas.length + 10, (obj.tamano || 36) + 20);
+    }
+
+    // Borde de selección
+    if (idx === estado.seleccion) {
+      ctx.strokeStyle = '#A7EBF2';
+      ctx.lineWidth = 2 / estado.zoom;
+      ctx.setLineDash([6, 3]);
+      ctx.strokeRect(obj.x - 4, obj.y - 4, obj.w + 8, obj.h + 8);
+      ctx.setLineDash([]);
+
+      // Manija de redimensionar (esquina bottom-right, más visible)
+      const hx = obj.x + obj.w + 4;
+      const hy = obj.y + obj.h + 4;
+      ctx.fillStyle = '#011C40';
+      ctx.fillRect(hx - 1, hy - 1, 14, 14);
+      ctx.fillStyle = '#A7EBF2';
+      ctx.fillRect(hx, hy, 12, 12);
+      // Líneas diagonales dentro de la manija para indicar resize
+      ctx.strokeStyle = '#011C40';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(hx + 4, hy + 11); ctx.lineTo(hx + 11, hy + 4);
+      ctx.moveTo(hx + 7, hy + 11); ctx.lineTo(hx + 11, hy + 7);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  });
+
+  ctx.restore();
+
+  // ── Overlay de RECORTE ──────────────────────────────────────
+  if (crop.activo) {
+    // Oscurecer todo el canvas fuera del área de recorte
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    // Top
+    ctx.fillRect(0, 0, canvas.width, crop.y);
+    // Bottom
+    ctx.fillRect(0, crop.y + crop.h, canvas.width, canvas.height - crop.y - crop.h);
+    // Left
+    ctx.fillRect(0, crop.y, crop.x, crop.h);
+    // Right
+    ctx.fillRect(crop.x + crop.w, crop.y, canvas.width - crop.x - crop.w, crop.h);
+
+    // Borde del área de recorte
+    ctx.strokeStyle = '#A7EBF2';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.strokeRect(crop.x, crop.y, crop.w, crop.h);
+
+    // Regla de tercios (líneas de guía)
+    ctx.strokeStyle = 'rgba(167,235,242,0.35)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(crop.x + crop.w/3, crop.y);
+    ctx.lineTo(crop.x + crop.w/3, crop.y + crop.h);
+    ctx.moveTo(crop.x + crop.w*2/3, crop.y);
+    ctx.lineTo(crop.x + crop.w*2/3, crop.y + crop.h);
+    ctx.moveTo(crop.x, crop.y + crop.h/3);
+    ctx.lineTo(crop.x + crop.w, crop.y + crop.h/3);
+    ctx.moveTo(crop.x, crop.y + crop.h*2/3);
+    ctx.lineTo(crop.x + crop.w, crop.y + crop.h*2/3);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Las 4 manijas de esquina
+    const manijas = [
+      { x: crop.x,          y: crop.y },
+      { x: crop.x + crop.w, y: crop.y },
+      { x: crop.x,          y: crop.y + crop.h },
+      { x: crop.x + crop.w, y: crop.y + crop.h },
+    ];
+    const MS = 10; // tamaño de manija
+    manijas.forEach(m => {
+      ctx.fillStyle = '#011C40';
+      ctx.fillRect(m.x - MS/2 - 1, m.y - MS/2 - 1, MS + 2, MS + 2);
+      ctx.fillStyle = '#A7EBF2';
+      ctx.fillRect(m.x - MS/2, m.y - MS/2, MS, MS);
+    });
+
+    ctx.restore();
+  }
+
+  actualizarInfoBar();
+  actualizarCapas();
+}
+
+// ── HISTORIAL ────────────────────────────────────────────────
+function guardarHistorial() {
+  const snapshot = JSON.stringify({
+    fondo:    estado.fondo,
+    gradiente:estado.gradiente,
+    objetos:  estado.objetos.map(o => ({...o, imagen: o.imagen ? '__img__' : null})),
+  });
+  estado.historial = estado.historial.slice(0, estado.indexHist + 1);
+  estado.historial.push(snapshot);
+  estado.indexHist = estado.historial.length - 1;
+}
+
+document.getElementById('btn-deshacer').addEventListener('click', () => {
+  if (estado.indexHist > 0) {
+    estado.indexHist--;
+    const s = JSON.parse(estado.historial[estado.indexHist]);
+    estado.fondo    = s.fondo;
+    estado.gradiente= s.gradiente;
+    estado.objetos  = s.objetos.map(o => ({...o, imagen: null}));
+    render();
+    mostrarToast('Deshecho ↩', 'info');
+  }
+});
+
+document.getElementById('btn-rehacer').addEventListener('click', () => {
+  if (estado.indexHist < estado.historial.length - 1) {
+    estado.indexHist++;
+    const s = JSON.parse(estado.historial[estado.indexHist]);
+    estado.fondo    = s.fondo;
+    estado.gradiente= s.gradiente;
+    estado.objetos  = s.objetos.map(o => ({...o, imagen: null}));
+    render();
+    mostrarToast('Rehecho ↪', 'info');
+  }
+});
+
+// ── RAIL DE ÍCONOS ───────────────────────────────────────────
+const layout = document.querySelector('.editor-layout');
+const panelTitulos = {
+  ia:         'IA Generativa',
+  agente:     'Agente',
+  subir:      'Subir imagen',
+  ajustar:    'Ajustar',
+  efectos:    'Efectos',
+  stickers:   'Belleza / Stickers',
+  plantillas: 'Plantillas / Borde',
+  texto:      'Texto',
+  colores:    'Elementos / Fondo',
+  pro:        'Más herramientas',
+};
+
+let panelActualRail = 'ia';
+let panelVisible = true;
+
+document.querySelectorAll('.rail-btn[data-rail]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.rail;
+
+    // Si ya está activo, toggle del panel
+    if (tab === panelActualRail) {
+      panelVisible = !panelVisible;
+      layout.classList.toggle('panel-abierto', panelVisible);
+      return;
+    }
+
+    // Cambiar de tab
+    document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+
+    document.querySelectorAll('[data-panel]').forEach(p => p.style.display = 'none');
+    const panel = document.querySelector(`[data-panel="${tab}"]`);
+    if (panel) panel.style.display = 'block';
+
+    document.getElementById('panel-titulo').textContent = panelTitulos[tab] || tab;
+    panelActualRail = tab;
+    panelVisible = true;
+    layout.classList.add('panel-abierto');
+  });
+});
+
+// Abrir panel inicial
+layout.classList.add('panel-abierto');
+
+// ── TABS PANEL IZQUIERDO (legacy — desactivado, rail lo maneja) ──
+document.querySelectorAll('.panel-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.panel-tab').forEach(t => {
+      t.classList.remove('activo');
+      t.setAttribute('aria-selected', 'false');
+    });
+    document.querySelectorAll('[data-panel]').forEach(p => p.style.display = 'none');
+    tab.classList.add('activo');
+    tab.setAttribute('aria-selected', 'true');
+    const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
+    if (panel) panel.style.display = 'block';
+  });
+});
+
+// ── PLANTILLAS ───────────────────────────────────────────────
+const plantillas = {
+  sunset:      { fondo:'#FF6B35', gradiente:'linear-gradient(135deg, #FF6B35, #F7C948)' },
+  ocean:       { fondo:'#0f3460', gradiente:'linear-gradient(135deg, #0f3460, #4ECDC4)' },
+  noche:       { fondo:'#0f0f1a', gradiente:null },
+  naturaleza:  { fondo:'#1a3a1a', gradiente:'linear-gradient(135deg, #1a3a1a, #4ECDC4)' },
+  fuego:       { fondo:'#8b0000', gradiente:'linear-gradient(135deg, #8b0000, #FF6B35)' },
+  galaxia:     { fondo:'#0d0d2b', gradiente:'linear-gradient(135deg, #0d0d2b, #6c3a9e)' },
+  minimalista: { fondo:'#f5f5f0', gradiente:null },
+  tropical:    { fondo:'#ff9a56', gradiente:'linear-gradient(135deg, #ff9a56, #ff6b9d)' },
+};
+
+document.querySelectorAll('[data-plantilla]').forEach(card => {
+  card.addEventListener('click', () => {
+    const p = plantillas[card.dataset.plantilla];
+    if (!p) return;
+    estado.fondo    = p.fondo;
+    estado.gradiente= p.gradiente;
+    guardarHistorial();
+    render();
+    mostrarToast('Plantilla aplicada 🎨', 'exito');
+  });
+});
+
+// ── SUBIR IMAGEN ─────────────────────────────────────────────
+document.getElementById('input-imagen').addEventListener('change', (e) => {
+  const archivo = e.target.files[0];
+  if (!archivo) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.width / img.height;
+      const w = Math.min(img.width, canvas.width * 0.8);
+      const h = w / ratio;
+      estado.objetos.push({
+        tipo: 'imagen',
+        imagen: img,
+        x: (canvas.width - w) / 2,
+        y: (canvas.height - h) / 2,
+        w, h,
+        rot: 0,
+      });
+      guardarHistorial();
+      render();
+      mostrarToast('Imagen agregada 📁', 'exito');
+      if (window.Creditos) window.Creditos.agregar(2);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(archivo);
+});
+
+// ── TEXTO ────────────────────────────────────────────────────
+const configTexto = {
+  titulo:    { texto:'Tu título aquí',        tamano:64, peso:'800', fuente:'Syne, sans-serif',    color:'#FFFFFF' },
+  subtitulo: { texto:'Subtítulo aquí',         tamano:40, peso:'700', fuente:'Syne, sans-serif',    color:'#CCCCCC' },
+  cuerpo:    { texto:'Escribe aquí tu texto...', tamano:24, peso:'400', fuente:'DM Sans, sans-serif', color:'#AAAAAA' },
+};
+
+document.querySelectorAll('[data-agregar-texto]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cfg = configTexto[btn.dataset.agregarTexto];
+    const obj = {
+      tipo: 'texto',
+      texto: cfg.texto,
+      x: 50, y: 50 + estado.objetos.length * 80,
+      w: canvas.width - 100, h: cfg.tamano + 20,
+      tamano: cfg.tamano, peso: cfg.peso, fuente: cfg.fuente,
+      color: cfg.color, rot: 0,
+    };
+    estado.objetos.push(obj);
+    estado.seleccion = estado.objetos.length - 1;
+    guardarHistorial();
+    render();
+    // Actualizar panel de edición con los valores del nuevo texto
+    actualizarPanelTexto(obj);
+    mostrarToast('Texto agregado — edítalo en el panel ✏️', 'exito');
+  });
+});
+
+// Hover en presets de texto
+document.querySelectorAll('.texto-preset').forEach(btn => {
+  btn.addEventListener('mouseenter', () => {
+    btn.style.borderColor = 'rgba(167,235,242,0.4)';
+    btn.style.background  = 'rgba(167,235,242,0.1)';
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.borderColor = '';
+    btn.style.background  = '';
+  });
+});
+
+function actualizarPanelTexto(obj) {
+  if (!obj || obj.tipo !== 'texto') return;
+  document.getElementById('texto-contenido').value  = obj.texto  || '';
+  const tam = obj.tamano || 36;
+  document.getElementById('texto-tamano').value     = tam;
+  const label = document.getElementById('texto-tamano-val');
+  if (label) label.textContent = tam + 'px';
+  document.getElementById('texto-peso').value       = obj.peso   || '700';
+  document.getElementById('texto-fuente').value     = obj.fuente || 'Syne, sans-serif';
+  const color = obj.color || '#ffffff';
+  document.getElementById('texto-color-pick').value = color;
+  syncColorTextoPreview(color);
+  // Marcar círculo activo si coincide
+  document.querySelectorAll('.color-texto-rapido').forEach(c => {
+    c.style.borderColor = c.dataset.color?.toLowerCase() === color.toLowerCase() ? '#A7EBF2' : 'transparent';
+  });
+}
+
+// Aplicar cambios del panel al objeto seleccionado
+document.getElementById('btn-aplicar-texto').addEventListener('click', () => {
+  if (estado.seleccion === null) {
+    mostrarToast('Selecciona un texto en el canvas primero', 'error');
+    return;
+  }
+  const obj = estado.objetos[estado.seleccion];
+  if (obj.tipo !== 'texto') {
+    mostrarToast('El objeto seleccionado no es un texto', 'error');
+    return;
+  }
+  const nuevoTexto = document.getElementById('texto-contenido').value.trim();
+  // Si el texto queda vacío, eliminar el objeto del canvas
+  if (!nuevoTexto) {
+    estado.objetos.splice(estado.seleccion, 1);
+    estado.seleccion = null;
+    document.getElementById('panel-objeto').style.display = 'none';
+    guardarHistorial();
+    render();
+    mostrarToast('Texto vacío eliminado 🗑', 'info');
+    return;
+  }
+  obj.texto  = nuevoTexto;
+  const nuevoTamano = parseInt(document.getElementById('texto-tamano').value, 10);
+  obj.tamano = (!isNaN(nuevoTamano) && nuevoTamano > 0) ? nuevoTamano : (obj.tamano || 36);
+  obj.h      = obj.tamano + 20; // Recalcular altura del bounding box
+  // Recalcular ancho según texto medido en canvas
+  ctx.font = `${obj.peso} ${obj.tamano}px ${obj.fuente}`;
+  const medida = ctx.measureText(obj.texto);
+  obj.w = Math.max(medida.width + 20, 100);
+  obj.peso   = document.getElementById('texto-peso').value;
+  obj.fuente = document.getElementById('texto-fuente').value;
+  obj.color  = document.getElementById('texto-color-pick').value;
+  guardarHistorial();
+  render();
+  mostrarToast('Texto actualizado ✓', 'exito');
+});
+
+// Helper: actualiza el preview de color de texto en el panel
+function syncColorTextoPreview(color) {
+  const prev = document.getElementById('texto-color-preview');
+  const hex  = document.getElementById('texto-color-hex');
+  if (prev) prev.style.background = color;
+  if (hex)  hex.textContent = color.toUpperCase();
+  const pick = document.getElementById('texto-color-pick');
+  if (pick) {
+    try { pick.value = color; } catch(e) {}
+  }
+}
+
+// Colores rápidos de texto
+document.querySelectorAll('.color-texto-rapido').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.color-texto-rapido').forEach(x => x.style.borderColor = 'transparent');
+    c.style.borderColor = '#A7EBF2';
+    const color = c.dataset.color;
+    syncColorTextoPreview(color);
+    // Aplica al texto seleccionado en tiempo real (NO afecta al fondo)
+    if (estado.seleccion !== null && estado.objetos[estado.seleccion]?.tipo === 'texto') {
+      estado.objetos[estado.seleccion].color = color;
+      guardarHistorial();
+      render();
+      mostrarToast('Color de texto aplicado', 'exito');
+    }
+  });
+});
+
+// Picker de color personalizado — aplica en tiempo real solo al texto seleccionado
+document.getElementById('texto-color-pick').addEventListener('input', (e) => {
+  const color = e.target.value;
+  // Deseleccionar círculos rápidos
+  document.querySelectorAll('.color-texto-rapido').forEach(x => x.style.borderColor = 'transparent');
+  syncColorTextoPreview(color);
+  if (estado.seleccion !== null && estado.objetos[estado.seleccion]?.tipo === 'texto') {
+    estado.objetos[estado.seleccion].color = color;
+    render(); // live preview sin guardar historial
+  }
+});
+document.getElementById('texto-color-pick').addEventListener('change', (e) => {
+  const color = e.target.value;
+  syncColorTextoPreview(color);
+  if (estado.seleccion !== null && estado.objetos[estado.seleccion]?.tipo === 'texto') {
+    estado.objetos[estado.seleccion].color = color;
+    guardarHistorial();
+    render();
+  }
+});
+
+// Live update de tamaño, peso, fuente Y TEXTO mientras se escribe/cambia
+// (color de texto tiene su propio listener dedicado arriba)
+['texto-contenido','texto-tamano','texto-peso','texto-fuente'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    // Actualizar el label del slider de tamaño en tiempo real
+    const sliderVal = parseInt(document.getElementById('texto-tamano').value, 10);
+    const label = document.getElementById('texto-tamano-val');
+    if (label) label.textContent = sliderVal + 'px';
+
+    if (estado.seleccion === null) return;
+    const obj = estado.objetos[estado.seleccion];
+    if (obj?.tipo !== 'texto') return;
+    const nuevoTexto = document.getElementById('texto-contenido').value;
+    if (nuevoTexto !== undefined) obj.texto = nuevoTexto;
+    const nuevoTamano = sliderVal;
+    if (!isNaN(nuevoTamano) && nuevoTamano > 0) {
+      obj.tamano = nuevoTamano;
+      obj.h = nuevoTamano + 20;
+    }
+    obj.peso   = document.getElementById('texto-peso').value;
+    obj.fuente = document.getElementById('texto-fuente').value;
+    obj.color  = document.getElementById('texto-color-pick').value;
+    render();
+  });
+});
+
+// ── STICKERS ─────────────────────────────────────────────────
+document.querySelectorAll('[data-sticker]').forEach(card => {
+  card.addEventListener('click', () => {
+    const emoji = card.dataset.sticker;
+    const size  = 80;
+    estado.objetos.push({
+      tipo: 'sticker',
+      emoji,
+      x: Math.random() * (canvas.width - size),
+      y: Math.random() * (canvas.height - size),
+      w: size, h: size, rot: 0,
+    });
+    guardarHistorial();
+    render();
+    mostrarToast(`Sticker ${emoji} agregado`, 'exito');
+  });
+});
+
+// ── FILTROS ──────────────────────────────────────────────────
+document.querySelectorAll('[data-filtro]').forEach(slider => {
+  slider.addEventListener('input', () => {
+    estado.filtros[slider.dataset.filtro] = parseInt(slider.value, 10);
+    aplicarFiltrosCanvas();
+  });
+});
+
+function aplicarFiltrosCanvas() {
+  const f = estado.filtros;
+  canvas.style.filter = [
+    `brightness(${f.brightness}%)`,
+    `contrast(${f.contrast}%)`,
+    `saturate(${f.saturate}%)`,
+    `opacity(${f.opacity}%)`,
+    `blur(${f.blur}px)`,
+    `sepia(${f.sepia}%)`,
+    `grayscale(${f.grayscale}%)`,
+  ].join(' ');
+}
+
+document.querySelectorAll('#btn-reset-filtros, #btn-reset-filtros2').forEach(btn => {
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    estado.filtros = { brightness:100, contrast:100, saturate:100, opacity:100, blur:0, sepia:0, grayscale:0 };
+    document.querySelectorAll('[data-filtro]').forEach(slider => {
+      if (['blur','sepia','grayscale'].includes(slider.dataset.filtro)) slider.value = 0;
+      else if (slider.dataset.filtro === 'opacity') slider.value = 100;
+      else slider.value = 100;
+    });
+    canvas.style.filter = 'none';
+    mostrarToast('Filtros reseteados', 'info');
+  });
+});
+
+// ── COLORES DE FONDO ─────────────────────────────────────────
+// Solo los círculos dentro del panel "colores" cambian el fondo
+document.querySelectorAll('[data-panel="colores"] [data-color]').forEach(circulo => {
+  circulo.addEventListener('click', () => {
+    estado.fondo    = circulo.dataset.color;
+    estado.gradiente= null;
+    document.querySelectorAll('[data-panel="colores"] [data-color]').forEach(c => c.classList.remove('activo'));
+    circulo.classList.add('activo');
+    guardarHistorial();
+    render();
+  });
+});
+
+document.querySelectorAll('[data-gradient]').forEach(circulo => {
+  circulo.addEventListener('click', () => {
+    estado.gradiente = circulo.dataset.gradient;
+    guardarHistorial();
+    render();
+  });
+});
+
+document.getElementById('color-custom').addEventListener('input', (e) => {
+  estado.fondo    = e.target.value;
+  estado.gradiente= null;
+  guardarHistorial();
+  render();
+});
+
+// ── HERRAMIENTAS PRO / MODAL ──────────────────────────────────
+const WORKER_URL = 'https://cv-ia-proxy.armamdofernando.workers.dev';
+
+const modalOverlay  = document.getElementById('modal-pro');
+const modalIcono    = document.getElementById('modal-icono');
+const modalTitulo   = document.getElementById('modal-titulo');
+const modalTexto    = document.getElementById('modal-texto');
+const modalCosto    = document.getElementById('modal-costo');
+const modalConfirmar= document.getElementById('modal-confirmar');
+const modalCancelar = document.getElementById('modal-cancelar');
+
+let proToolActual   = null;
+let proCostoActual  = 0;
+
+document.querySelectorAll('[data-pro-tool]').forEach(item => {
+  item.addEventListener('click', () => {
+    proToolActual  = item.dataset.proTool;
+    proCostoActual = parseInt(item.dataset.costo, 10);
+
+    const iconos = { 'bg-remove':'✂️','ai-enhance':'🪄','ai-generate':'🤖','hd-export':'🖥️','video-export':'🎬' };
+    const nombres= { 'bg-remove':'Eliminar fondo','ai-enhance':'Mejorar con IA','ai-generate':'Generar imagen con IA','hd-export':'Exportar HD 4K','video-export':'Exportar a video' };
+
+    modalIcono.textContent  = iconos[proToolActual];
+    modalTitulo.textContent = nombres[proToolActual];
+    modalTexto.textContent  = `Esta herramienta usa ${proCostoActual} créditos. Tienes ${window.Creditos?.obtener() || 0} disponibles.`;
+    modalCosto.textContent  = `⭐ ${proCostoActual} créditos`;
+    modalOverlay.classList.add('visible');
+  });
+});
+
+modalCancelar.addEventListener('click', () => modalOverlay.classList.remove('visible'));
+modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('visible'); });
+
+modalConfirmar.addEventListener('click', async () => {
+  if (!window.Creditos) return;
+  const exito = window.Creditos.gastar(proCostoActual);
+  if (!exito) {
+    mostrarToast('Sin créditos suficientes ⭐', 'error');
+    modalOverlay.classList.remove('visible');
+    return;
+  }
+
+  modalOverlay.classList.remove('visible');
+
+  // ── Eliminar fondo con Clipdrop via Worker ──
+  if (proToolActual === 'bg-remove') {
+    mostrarToast('✂️ Eliminando fondo…', 'info');
+
+    try {
+      // 1. Exportar canvas actual como Blob PNG
+      const blob = await new Promise((res, rej) => {
+        canvas.toBlob(b => b ? res(b) : rej(new Error('Canvas vacío')), 'image/png');
+      });
+
+      // 2. Enviar al Worker (proxy Clipdrop)
+      const form = new FormData();
+      form.append('image_file', blob, 'canvas.png');
+
+      const resp = await fetch(`${WORKER_URL}/remove-background`, {
+        method: 'POST',
+        body: form,
+      });
+
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(`Worker error ${resp.status}: ${msg}`);
+      }
+
+      // 3. Recibir PNG sin fondo y añadirlo como nueva capa
+      const resultBlob = await resp.blob();
+      const url = URL.createObjectURL(resultBlob);
+      const img = new Image();
+      img.onload = () => {
+        const nuevaCapa = {
+          id: Date.now(),
+          tipo: 'imagen',
+          img,
+          x: 0,
+          y: 0,
+          w: canvas.width,
+          h: canvas.height,
+          opacidad: 1,
+          visible: true,
+          nombre: 'Sin fondo',
+        };
+        if (Array.isArray(estado.capas)) {
+          estado.capas.push(nuevaCapa);
+        }
+        guardarHistorial();
+        render();
+        URL.revokeObjectURL(url);
+        mostrarToast('✅ ¡Fondo eliminado!', 'exito');
+      };
+      img.onerror = () => { throw new Error('No se pudo cargar la imagen resultante'); };
+      img.src = url;
+
+    } catch (err) {
+      console.error('bg-remove error:', err);
+      window.Creditos.devolver?.(proCostoActual);
+      mostrarToast(`❌ Error: ${err.message}`, 'error');
+    }
+
+  } else {
+    // Otras herramientas pro (próximamente)
+    mostrarToast(`✅ ${proToolActual} activado (próximamente)`, 'exito');
+  }
+});
+
+// ── CANVAS MOUSE EVENTS ───────────────────────────────────────
+const wrapper = document.getElementById('canvas-wrapper');
+
+function posCanvas(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left) / estado.zoom,
+    y: (e.clientY - rect.top)  / estado.zoom,
+  };
+}
+
+function hitTest(x, y) {
+  for (let i = estado.objetos.length - 1; i >= 0; i--) {
+    const o = estado.objetos[i];
+    if (x >= o.x && x <= o.x + o.w && y >= o.y && y <= o.y + o.h) return i;
+  }
+  return null;
+}
+
+// Check if pos is near the resize handle (bottom-right corner)
+function hitResizeHandle(x, y) {
+  if (estado.seleccion === null) return false;
+  const obj = estado.objetos[estado.seleccion];
+  const hx = obj.x + obj.w + 4;
+  const hy = obj.y + obj.h + 4;
+  return x >= hx - 6 && x <= hx + 16 && y >= hy - 6 && y <= hy + 16;
+}
+
+// Resize state
+let redimensionando = false;
+let resizeStartX = 0, resizeStartY = 0;
+let resizeStartW = 0, resizeStartH = 0;
+
+canvas.addEventListener('mousedown', (e) => {
+  const pos = posCanvas(e);
+
+  // ── Modo RECORTE ──────────────────────────────────────────
+  if (crop.activo) {
+    const manija = cropManijaCercana(pos.x, pos.y);
+    if (manija) {
+      crop.manija    = manija;
+      crop.startX    = pos.x;
+      crop.startY    = pos.y;
+      crop.startCrop = { x: crop.x, y: crop.y, w: crop.w, h: crop.h };
+      canvas.style.cursor = 'nwse-resize';
+    } else if (pos.x >= crop.x && pos.x <= crop.x + crop.w &&
+               pos.y >= crop.y && pos.y <= crop.y + crop.h) {
+      // Arrastrar todo el área de recorte
+      crop.arrastrando = true;
+      crop.startX = pos.x - crop.x;
+      crop.startY = pos.y - crop.y;
+      canvas.style.cursor = 'move';
+    }
+    return;
+  }
+
+  if (estado.herramienta !== 'seleccionar' && estado.herramienta !== 'mover') return;
+
+  // Check resize handle first
+  if (hitResizeHandle(pos.x, pos.y) && estado.seleccion !== null) {
+    redimensionando = true;
+    resizeStartX = pos.x;
+    resizeStartY = pos.y;
+    const obj = estado.objetos[estado.seleccion];
+    resizeStartW = obj.w;
+    resizeStartH = obj.h;
+    canvas.style.cursor = 'nwse-resize';
+    return;
+  }
+
+  const hit = hitTest(pos.x, pos.y);
+  if (hit !== null) {
+    estado.seleccion = hit;
+    estado.arrastrar = true;
+    const obj = estado.objetos[hit];
+    estado.offsetX = pos.x - obj.x;
+    estado.offsetY = pos.y - obj.y;
+    mostrarPropiedades(obj);
+  } else {
+    estado.seleccion = null;
+    document.getElementById('panel-objeto').style.display = 'none';
+  }
+  render();
+});
+
+canvas.addEventListener('mousemove', (e) => {
+  const pos = posCanvas(e);
+
+  // ── Modo RECORTE ──────────────────────────────────────────
+  if (crop.activo) {
+    if (crop.manija && crop.startCrop) {
+      const dx = pos.x - crop.startX;
+      const dy = pos.y - crop.startY;
+      const s  = crop.startCrop;
+      const obj = estado.objetos[crop.objIdx];
+      const MIN = 20;
+      if (crop.manija === 'tl') {
+        crop.x = Math.min(s.x + dx, s.x + s.w - MIN);
+        crop.y = Math.min(s.y + dy, s.y + s.h - MIN);
+        crop.w = s.w - (crop.x - s.x);
+        crop.h = s.h - (crop.y - s.y);
+      } else if (crop.manija === 'tr') {
+        crop.y = Math.min(s.y + dy, s.y + s.h - MIN);
+        crop.w = Math.max(MIN, s.w + dx);
+        crop.h = s.h - (crop.y - s.y);
+      } else if (crop.manija === 'bl') {
+        crop.x = Math.min(s.x + dx, s.x + s.w - MIN);
+        crop.w = s.w - (crop.x - s.x);
+        crop.h = Math.max(MIN, s.h + dy);
+      } else if (crop.manija === 'br') {
+        crop.w = Math.max(MIN, s.w + dx);
+        crop.h = Math.max(MIN, s.h + dy);
+      }
+      // Limitar dentro de la imagen
+      if (obj) {
+        crop.x = Math.max(obj.x, Math.min(crop.x, obj.x + obj.w - MIN));
+        crop.y = Math.max(obj.y, Math.min(crop.y, obj.y + obj.h - MIN));
+        crop.w = Math.min(crop.w, obj.x + obj.w - crop.x);
+        crop.h = Math.min(crop.h, obj.y + obj.h - crop.y);
+      }
+      render();
+      return;
+    }
+    if (crop.arrastrando) {
+      const obj = estado.objetos[crop.objIdx];
+      crop.x = Math.max(obj ? obj.x : 0, pos.x - crop.startX);
+      crop.y = Math.max(obj ? obj.y : 0, pos.y - crop.startY);
+      if (obj) {
+        crop.x = Math.min(crop.x, obj.x + obj.w - crop.w);
+        crop.y = Math.min(crop.y, obj.y + obj.h - crop.h);
+      }
+      render();
+      return;
+    }
+    // Cursor feedback en modo crop
+    const m = cropManijaCercana(pos.x, pos.y);
+    if (m) canvas.style.cursor = 'nwse-resize';
+    else if (pos.x >= crop.x && pos.x <= crop.x + crop.w &&
+             pos.y >= crop.y && pos.y <= crop.y + crop.h)
+      canvas.style.cursor = 'move';
+    else canvas.style.cursor = 'crosshair';
+    return;
+  }
+
+  // Resize drag
+  if (redimensionando && estado.seleccion !== null) {
+    const obj = estado.objetos[estado.seleccion];
+    const dx = pos.x - resizeStartX;
+    const dy = pos.y - resizeStartY;
+    obj.w = Math.max(30, resizeStartW + dx);
+    obj.h = Math.max(20, resizeStartH + dy);
+    // Update right panel
+    document.getElementById('obj-w').value = Math.round(obj.w);
+    document.getElementById('obj-h').value = Math.round(obj.h);
+    render();
+    return;
+  }
+
+  // Move drag
+  if (estado.arrastrar && estado.seleccion !== null) {
+    const obj = estado.objetos[estado.seleccion];
+    obj.x = pos.x - estado.offsetX;
+    obj.y = pos.y - estado.offsetY;
+    render();
+    return;
+  }
+
+  // Cursor feedback: show resize cursor near handle
+  if (hitResizeHandle(pos.x, pos.y)) {
+    canvas.style.cursor = 'nwse-resize';
+  } else {
+    const cursores = { seleccionar:'default', mover:'grab', texto:'text', forma:'crosshair', recortar:'crosshair' };
+    canvas.style.cursor = cursores[estado.herramienta] || 'default';
+  }
+});
+
+canvas.addEventListener('mouseup', () => {
+  // Crop: soltar manija o área
+  if (crop.activo) {
+    crop.manija      = null;
+    crop.arrastrando = false;
+    crop.startCrop   = null;
+    canvas.style.cursor = 'crosshair';
+    return;
+  }
+  if (redimensionando || estado.arrastrar) guardarHistorial();
+  redimensionando = false;
+  estado.arrastrar = false;
+  const cursores = { seleccionar:'default', mover:'grab', texto:'text', forma:'crosshair', recortar:'crosshair' };
+  canvas.style.cursor = cursores[estado.herramienta] || 'default';
+});
+
+canvas.addEventListener('dblclick', (e) => {
+  const pos = posCanvas(e);
+  const hit = hitTest(pos.x, pos.y);
+  if (hit !== null && estado.objetos[hit].tipo === 'texto') {
+    estado.seleccion = hit;
+    const obj = estado.objetos[hit];
+    actualizarPanelTexto(obj);
+    mostrarPropiedades(obj);
+    // Abrir panel de texto
+    document.querySelectorAll('[data-panel]').forEach(p => p.style.display = 'none');
+    document.querySelector('[data-panel="texto"]').style.display = 'block';
+    document.getElementById('panel-titulo').textContent = 'Texto';
+    document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('activo'));
+    document.querySelector('[data-rail="texto"]').classList.add('activo');
+    panelActualRail = 'texto';
+    panelVisible = true;
+    layout.classList.add('panel-abierto');
+    document.getElementById('texto-contenido').focus();
+    render();
+    mostrarToast('Doble clic — edita el texto en el panel ✏️', 'info');
+  }
+});
+
+function mostrarPropiedades(obj) {
+  document.getElementById('panel-objeto').style.display = 'block';
+  document.getElementById('obj-x').value = Math.round(obj.x);
+  document.getElementById('obj-y').value = Math.round(obj.y);
+  document.getElementById('obj-w').value = Math.round(obj.w);
+  document.getElementById('obj-h').value = Math.round(obj.h);
+  document.getElementById('obj-rotacion').value = obj.rot || 0;
+  document.getElementById('obj-rotacion-val').textContent = `${obj.rot || 0}°`;
+  if (obj.color) {
+    document.getElementById('obj-color').value = obj.color;
+    document.getElementById('obj-color-preview').style.background = obj.color;
+  }
+  // Sync panel de texto si el objeto es texto
+  if (obj.tipo === 'texto') actualizarPanelTexto(obj);
+}
+
+document.getElementById('obj-rotacion').addEventListener('input', (e) => {
+  if (estado.seleccion === null) return;
+  const val = parseInt(e.target.value, 10);
+  estado.objetos[estado.seleccion].rot = val;
+  document.getElementById('obj-rotacion-val').textContent = `${val}°`;
+  render();
+});
+
+document.getElementById('obj-color').addEventListener('input', (e) => {
+  if (estado.seleccion === null) return;
+  estado.objetos[estado.seleccion].color = e.target.value;
+  document.getElementById('obj-color-preview').style.background = e.target.value;
+  render();
+});
+
+document.getElementById('btn-eliminar-obj').addEventListener('click', () => {
+  if (estado.seleccion === null) return;
+  estado.objetos.splice(estado.seleccion, 1);
+  estado.seleccion = null;
+  document.getElementById('panel-objeto').style.display = 'none';
+  guardarHistorial();
+  render();
+});
+
+document.getElementById('btn-obj-arriba').addEventListener('click', () => {
+  const i = estado.seleccion;
+  if (i === null || i >= estado.objetos.length - 1) return;
+  [estado.objetos[i], estado.objetos[i+1]] = [estado.objetos[i+1], estado.objetos[i]];
+  estado.seleccion = i + 1;
+  guardarHistorial();
+  render();
+});
+
+document.getElementById('btn-obj-abajo').addEventListener('click', () => {
+  const i = estado.seleccion;
+  if (i === null || i <= 0) return;
+  [estado.objetos[i], estado.objetos[i-1]] = [estado.objetos[i-1], estado.objetos[i]];
+  estado.seleccion = i - 1;
+  guardarHistorial();
+  render();
+});
+
+// ── HERRAMIENTAS TOOLBAR ──────────────────────────────────────
+document.querySelectorAll('.canvas-tool[data-herramienta]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.canvas-tool').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+    estado.herramienta = btn.dataset.herramienta;
+
+    // Cursor según herramienta
+    const cursores = {
+      seleccionar: 'default',
+      mover:       'grab',
+      texto:       'text',
+      forma:       'crosshair',
+      recortar:    'crosshair'
+    };
+    canvas.style.cursor = cursores[btn.dataset.herramienta] || 'default';
+
+    // Activar crop inmediatamente si hay imagen seleccionada
+    if (btn.dataset.herramienta === 'recortar') {
+      activarCrop();
+      return;
+    }
+
+    mostrarToast(`Herramienta: ${btn.title.split(' (')[0]}`, 'info');
+  });
+});
+
+// ── CANVAS CLICK para herramienta TEXTO y FORMA ──────────────
+canvas.addEventListener('click', (e) => {
+  if (estado.herramienta === 'texto') {
+    const pos = posCanvas(e);
+    const obj = {
+      tipo: 'texto', texto: 'Tu texto aquí',
+      x: pos.x - 60, y: pos.y - 18,
+      w: 300, h: 56,
+      tamano: 36, peso: '700',
+      fuente: 'Syne, sans-serif',
+      color: '#FFFFFF', rot: 0,
+    };
+    estado.objetos.push(obj);
+    estado.seleccion = estado.objetos.length - 1;
+    guardarHistorial();
+    render();
+    actualizarPanelTexto(obj);
+    // Abrir panel texto
+    document.querySelectorAll('[data-panel]').forEach(p => p.style.display = 'none');
+    document.querySelector('[data-panel="texto"]').style.display = 'block';
+    document.getElementById('panel-titulo').textContent = 'Texto';
+    document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('activo'));
+    document.querySelector('[data-rail="texto"]').classList.add('activo');
+    panelActualRail = 'texto';
+    layout.classList.add('panel-abierto');
+    document.getElementById('texto-contenido').focus();
+    mostrarToast('Texto agregado — edítalo en el panel ✏️', 'exito');
+    return;
+  }
+
+  if (estado.herramienta === 'forma') {
+    const pos = posCanvas(e);
+    estado.objetos.push({
+      tipo: 'forma', forma: 'rect',
+      x: pos.x - 60, y: pos.y - 40,
+      w: 120, h: 80,
+      color: '#A7EBF2', rot: 0,
+    });
+    guardarHistorial();
+    render();
+    mostrarToast('Forma agregada ◻', 'exito');
+    return;
+  }
+});
+
+// ── ZOOM ─────────────────────────────────────────────────────
+document.getElementById('zoom-select').addEventListener('change', (e) => {
+  estado.zoom = parseFloat(e.target.value);
+  canvas.style.transform = `scale(${estado.zoom})`;
+  canvas.style.transformOrigin = 'center center';
+  document.getElementById('canvas-zoom-label').textContent = `${Math.round(estado.zoom * 100)}%`;
+});
+
+// ── PRESETS DE TAMAÑO ─────────────────────────────────────────
+document.querySelectorAll('[data-preset]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const [w, h] = btn.dataset.preset.split(',').map(Number);
+    document.getElementById('canvas-w').value = w;
+    document.getElementById('canvas-h').value = h;
+    aplicarTamanyo(w, h);
+  });
+});
+
+document.getElementById('btn-aplicar-tam').addEventListener('click', () => {
+  const w = parseInt(document.getElementById('canvas-w').value, 10);
+  const h = parseInt(document.getElementById('canvas-h').value, 10);
+  aplicarTamanyo(w, h);
+});
+
+function aplicarTamanyo(w, h) {
+  canvas.width  = w;
+  canvas.height = h;
+  document.getElementById('canvas-dimensiones').textContent = `${w} × ${h} px`;
+  guardarHistorial();
+  render();
+  mostrarToast(`Tamaño: ${w}×${h}px`, 'info');
+}
+
+// ── EXPORTAR ─────────────────────────────────────────────────
+document.getElementById('btn-exportar').addEventListener('click', () => {
+  // Guarda filtros CSS, aplica al canvas real para exportar
+  const filtroActual = canvas.style.filter;
+  const nombre  = document.querySelector('.editor-topbar__nombre').value || 'mi-diseno';
+  const enlace  = document.createElement('a');
+  enlace.download = `${nombre.replace(/\s+/g,'-')}.png`;
+  enlace.href  = canvas.toDataURL('image/png');
+  enlace.click();
+  mostrarToast('Diseño exportado ⬇️', 'exito');
+  if (window.Creditos) window.Creditos.agregar(5); // gana créditos por guardar
+});
+
+// ── INFO BAR ─────────────────────────────────────────────────
+function actualizarInfoBar() {
+  document.getElementById('canvas-objetos').textContent = `${estado.objetos.length} objeto${estado.objetos.length !== 1 ? 's' : ''}`;
+}
+
+// ── CAPAS ────────────────────────────────────────────────────
+function actualizarCapas() {
+  const lista = document.getElementById('capas-lista');
+  if (estado.objetos.length === 0) {
+    lista.innerHTML = '<div style="font-size:.75rem;color:var(--texto-suave);text-align:center;padding:.75rem">Sin objetos aún</div>';
+    return;
+  }
+
+  lista.innerHTML = '';
+  [...estado.objetos].reverse().forEach((obj, ri) => {
+    const i = estado.objetos.length - 1 - ri;
+    const iconos = { imagen:'🖼️', texto:'T', sticker: obj.emoji || '⭐' };
+    const nombres= { imagen:'Imagen', texto: obj.texto?.slice(0,20) || 'Texto', sticker:'Sticker' };
+
+    const item = document.createElement('div');
+    item.className = `capa-item${i === estado.seleccion ? ' activa' : ''}`;
+    item.innerHTML = `<span class="capa-icono">${iconos[obj.tipo]}</span><span class="capa-nombre">${nombres[obj.tipo]}</span>`;
+    item.addEventListener('click', () => {
+      estado.seleccion = i;
+      mostrarPropiedades(obj);
+      render();
+    });
+    lista.appendChild(item);
+  });
+}
+
+// ── TECLADO ──────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  // Escape cancela el recorte
+  if (e.key === 'Escape' && crop.activo) {
+    cancelarCrop();
+    return;
+  }
+  // Enter confirma el recorte
+  if (e.key === 'Enter' && crop.activo) {
+    confirmarCrop();
+    return;
+  }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (document.activeElement === document.body || document.activeElement === canvas) {
+      if (estado.seleccion !== null) {
+        estado.objetos.splice(estado.seleccion, 1);
+        estado.seleccion = null;
+        document.getElementById('panel-objeto').style.display = 'none';
+        guardarHistorial();
+        render();
+      }
+    }
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    document.getElementById('btn-deshacer').click();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+    document.getElementById('btn-rehacer').click();
+  }
+});
+
+// ── INICIALIZAR ──────────────────────────────────────────────
+guardarHistorial();
+render();
+
+// Leer tab desde URL ?tab=...
+const tabURL = new URLSearchParams(window.location.search).get('tab');
+if (tabURL) {
+  const btn = document.querySelector(`[data-tab="${tabURL}"]`);
+  if (btn) btn.click();
+}
+
+console.log('🎨 Pixeo Editor cargado');
+</script>
+
+</body>
+</html>
