@@ -154,6 +154,10 @@
     .quick-actions__btn.qa-loading .qa-label { display: none; }
     @keyframes qaSpin { to { transform: rotate(360deg); } }
 
+    /* ── Descargar: solo visible después de usar Quitar fondo o Mejorar calidad ── */
+    .download-wrap { display: none; }
+    .download-wrap.qa-visible { display: block; }
+
     /* ── Segunda zona: foto de referencia opcional ── */
     .ref-section { display: none; margin-top: 18px; }
     .upload-zona.has-img ~ .ref-section,
@@ -178,6 +182,27 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .credits-hint { margin-top: 10px; font-size: .74rem; color: rgba(255,255,255,.26); text-align: center; }
     .credits-hint strong { color: var(--orange); }
+
+    /* ── Botón "Copiar estilo gratis" (Gemini) ── */
+    .btn-libre {
+      background: linear-gradient(135deg,#4ECDC4,#2E8B84);
+      box-shadow: 0 8px 30px rgba(78,205,196,.3);
+      margin-top: 12px;
+    }
+    .btn-libre:hover:not(:disabled) { box-shadow: 0 14px 42px rgba(78,205,196,.45); }
+
+    /* Galería de resultados gratis (varias variaciones) */
+    .resultado-libre { display: none; margin-top: 18px; background: rgba(255,255,255,.03); border: 1px solid rgba(78,205,196,.22); border-radius: 16px; padding: 18px; text-align: center; }
+    .resultado-libre.show { display: block; }
+    .resultado-libre__title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; margin-bottom: 12px; }
+    .resultado-libre__status { font-size: .8rem; color: var(--muted); margin-bottom: 10px; }
+    .resultado-libre__error { color: #ff6b6b; font-size: .82rem; margin-bottom: 10px; }
+    .resultado-libre__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .resultado-libre__item { border-radius: 12px; overflow: hidden; background: rgba(0,0,0,.3); position: relative; }
+    .resultado-libre__item img { width: 100%; display: block; }
+    .resultado-libre__item a { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,.75); color: #fff; border-radius: 8px; padding: 5px 8px; font-size: .72rem; text-decoration: none; font-weight: 700; }
+    .resultado-libre__spinner { width: 30px; height: 30px; margin: 10px auto; border: 3px solid rgba(78,205,196,.25); border-top-color: #4ECDC4; border-radius: 50%; animation: spin .8s linear infinite; }
+    .resultado-libre__close { background: transparent; border: 1px solid rgba(255,255,255,.18); color: var(--muted); border-radius: 10px; padding: 8px 16px; font-size: .8rem; cursor: pointer; }
 
     /* Descargar */
     .download-wrap { position: relative; display: inline-block; }
@@ -422,7 +447,7 @@
         <button class="quick-actions__btn" id="btnMejorar" type="button" onclick="quickAction('enhance-image', this)">
           <span class="qa-spinner"></span><span class="qa-label">✨ Mejorar calidad</span>
         </button>
-        <div class="download-wrap">
+        <div class="download-wrap" id="downloadWrap">
           <button class="quick-actions__btn qa-download" type="button" onclick="toggleDownloadMenu(event)">
             <span class="qa-label">⬇️ Descargar</span>
           </button>
@@ -443,7 +468,7 @@
         <span class="ref-upload-zona__ico">🖼️</span>
         <div class="ref-upload-zona__text">
           <div class="ref-upload-zona__title">Sube una foto con el estilo que te gusta</div>
-          <div class="ref-upload-zona__hint">Por ahora usamos el estilo elegido arriba (<span id="styleNameHint">Synthwave</span>) — la foto de referencia libre aún no está conectada</div>
+          <div class="ref-upload-zona__hint">La IA copiará ese estilo automáticamente, sin escribir nada — gratis</div>
         </div>
         <div class="ref-preview" id="refPreview">
           <img id="refPreviewImg" src="" alt="Foto de referencia">
@@ -452,6 +477,21 @@
         </div>
       </div>
       <input type="file" id="refFileInput" accept="image/*" hidden onchange="onRefFileChange(event)">
+
+      <button class="btn-transf btn-libre" id="btnEstiloLibre" type="button" disabled onclick="copiarEstiloGratis()">
+        <div class="spinner" id="spinnerLibre"></div>
+        <span id="btnEstiloLibreTxt">🎨 Sube una foto de referencia arriba para copiar su estilo (gratis)</span>
+      </button>
+      <p class="credits-hint">Copiar estilo es <strong>gratis</strong> · <span id="libreRestantesTxt">5</span> usos gratis al día</p>
+
+      <div class="resultado-libre" id="resultadoLibre">
+        <div class="resultado-libre__title" id="resultadoLibreTitle">Copiando el estilo…</div>
+        <div id="resultadoLibreSpinnerWrap"><div class="resultado-libre__spinner"></div></div>
+        <div class="resultado-libre__status" id="resultadoLibreStatus">Esto toma unos segundos…</div>
+        <div class="resultado-libre__error" id="resultadoLibreError" style="display:none;"></div>
+        <div class="resultado-libre__grid" id="resultadoLibreGrid"></div>
+        <button class="resultado-libre__close" type="button" onclick="cerrarResultadoLibre()">Cerrar</button>
+      </div>
     </div>
 
     <input type="file" id="fileInput" accept="image/*" hidden onchange="onFileChange(event)">
@@ -755,6 +795,7 @@ const refFileInp = document.getElementById('refFileInput');
 const refPrevImg = document.getElementById('refPreviewImg');
 let imgB64    = null;
 let refImgB64 = null;
+let fotoProcesada = false;
 
 const STYLE_NAMES = { anime:'Anime', cyberpunk:'Cyberpunk', ghibli:'Ghibli', synthwave:'Synthwave', pixar:'Pixar 3D' };
 function actualizarStyleHint() {
@@ -780,6 +821,7 @@ function loadImg(file) {
     btnT.disabled = false;
     btnTxt.textContent = 'Transformar mi foto';
     actualizarStyleHint();
+    actualizarBotonLibre();
   };
   r.readAsDataURL(file);
 }
@@ -790,6 +832,9 @@ function clearImg(e) {
   fileInp.value = '';
   btnT.disabled = true;
   btnTxt.textContent = 'Primero sube tu foto';
+  fotoProcesada = false;
+  document.getElementById('downloadWrap').classList.remove('qa-visible');
+  actualizarBotonLibre();
 }
 
 /* ── Botones rápidos: Quitar fondo / Mejorar calidad (ya conectados al Worker real) ── */
@@ -817,6 +862,9 @@ async function quickAction(ruta, btn) {
       prevImg.src = url;
       imgB64 = await urlToB64(url);
     }
+    // Ya se usó al menos una herramienta: ahora sí mostramos Descargar
+    fotoProcesada = true;
+    document.getElementById('downloadWrap').classList.add('qa-visible');
   } catch (err) {
     console.error(err);
     alert('No se pudo procesar la imagen. Intenta de nuevo en unos segundos.');
@@ -838,7 +886,7 @@ async function urlToB64(url) {
   return blobToB64(blob);
 }
 
-/* ── Foto de referencia (opcional) — lista para conectar cuando el modelo de estilo esté habilitado ── */
+/* ── Foto de referencia (opcional) — usada por el flujo gratis de Gemini ── */
 function triggerRefInput() { if (!refZona.classList.contains('has-img')) refFileInp.click(); }
 function onRefFileChange(e) { const f = e.target.files[0]; if (f) loadRefImg(f); }
 function onRefDragOver(e) { e.preventDefault(); refZona.classList.add('drag-over'); }
@@ -854,6 +902,7 @@ function loadRefImg(file) {
     refImgB64 = ev.target.result;
     refPrevImg.src = refImgB64;
     refZona.classList.add('has-img');
+    actualizarBotonLibre();
   };
   r.readAsDataURL(file);
 }
@@ -862,6 +911,90 @@ function clearRefImg(e) {
   refImgB64 = null; refPrevImg.src = '';
   refZona.classList.remove('has-img');
   refFileInp.value = '';
+  actualizarBotonLibre();
+}
+
+/* ══ Copiar estilo gratis (Gemini) — sin escribir ningún prompt ══ */
+const btnLibre     = document.getElementById('btnEstiloLibre');
+const btnLibreTxt  = document.getElementById('btnEstiloLibreTxt');
+const spinnerLibre = document.getElementById('spinnerLibre');
+const resultadoLibre       = document.getElementById('resultadoLibre');
+const resultadoLibreTitle  = document.getElementById('resultadoLibreTitle');
+const resultadoLibreStatus = document.getElementById('resultadoLibreStatus');
+const resultadoLibreError  = document.getElementById('resultadoLibreError');
+const resultadoLibreGrid   = document.getElementById('resultadoLibreGrid');
+const resultadoLibreSpinnerWrap = document.getElementById('resultadoLibreSpinnerWrap');
+
+function actualizarBotonLibre() {
+  if (imgB64 && refImgB64) {
+    btnLibre.disabled = false;
+    btnLibreTxt.textContent = '🎨 Copiar este estilo (gratis)';
+  } else {
+    btnLibre.disabled = true;
+    btnLibreTxt.textContent = '🎨 Sube tu foto y una foto de referencia arriba para copiar su estilo (gratis)';
+  }
+}
+
+async function copiarEstiloGratis() {
+  if (!imgB64 || !refImgB64) return;
+
+  const usuario = (window.pixeoUser && window.pixeoUser()) || null;
+  if (!usuario) {
+    if (window.abrirModalLogin) window.abrirModalLogin();
+    else alert('Inicia sesión para continuar.');
+    return;
+  }
+
+  btnLibre.disabled = true;
+  btnLibre.classList.add('loading');
+
+  resultadoLibre.classList.add('show');
+  resultadoLibreTitle.textContent = 'Copiando el estilo…';
+  resultadoLibreStatus.style.display = 'block';
+  resultadoLibreStatus.textContent = 'Analizando tu foto y la referencia…';
+  resultadoLibreError.style.display = 'none';
+  resultadoLibreGrid.innerHTML = '';
+  resultadoLibreSpinnerWrap.style.display = 'block';
+  resultadoLibre.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  try {
+    const idToken = await usuario.getIdToken();
+    const resp = await fetch('/.netlify/functions/estilo-libre', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken, imagenBase: imgB64, imagenReferencia: refImgB64 }),
+    });
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      throw new Error(data.error || 'No se pudo copiar el estilo.');
+    }
+
+    resultadoLibreSpinnerWrap.style.display = 'none';
+    resultadoLibreStatus.style.display = 'none';
+    resultadoLibreTitle.textContent = '¡Listo! Elige tu favorita ✨';
+    (data.imagenes || []).forEach((url, i) => {
+      const item = document.createElement('div');
+      item.className = 'resultado-libre__item';
+      item.innerHTML = `<img src="${url}" alt="Variación ${i+1}"><a href="${url}" download="pixeo-estilo-libre-${i+1}.png">⬇️</a>`;
+      resultadoLibreGrid.appendChild(item);
+    });
+    if (typeof data.restantes === 'number') {
+      document.getElementById('libreRestantesTxt').textContent = data.restantes;
+    }
+  } catch (err) {
+    resultadoLibreSpinnerWrap.style.display = 'none';
+    resultadoLibreStatus.style.display = 'none';
+    resultadoLibreError.style.display = 'block';
+    resultadoLibreError.textContent = err.message || 'Error de conexión. Intenta de nuevo.';
+  } finally {
+    btnLibre.disabled = false;
+    btnLibre.classList.remove('loading');
+  }
+}
+
+function cerrarResultadoLibre() {
+  resultadoLibre.classList.remove('show');
 }
 
 const COSTO_TRANSFORMACION = 15;
