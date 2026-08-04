@@ -395,7 +395,7 @@
           <div class="c-card__check">✓</div>
           <div class="c-card__info"><div class="c-card__name">Anime</div><div class="c-card__tag">Fantasy · Ilustración</div></div>
         </div>
-        <div class="c-card" data-style="cyberpunk" onclick="selectCard(1)">
+        <div class="c-card c-card--arrastrable" data-style="cyberpunk" data-ejemplo-img="assets/img/estilos/cyberpunk-ejemplo.jpg" onclick="selectCard(1)">
           <div class="c-card__bg bg-cyber"></div>
           <div class="c-card__rating">8.9 ★</div>
           <div class="c-card__check">✓</div>
@@ -407,13 +407,13 @@
           <div class="c-card__check">✓</div>
           <div class="c-card__info"><div class="c-card__name">Ghibli</div><div class="c-card__tag">Acuarela · Natural</div></div>
         </div>
-        <div class="c-card" data-style="synthwave" onclick="selectCard(3)">
+        <div class="c-card c-card--arrastrable" data-style="synthwave" data-ejemplo-img="assets/img/estilos/synthwave-ejemplo.jpg" onclick="selectCard(3)">
           <div class="c-card__bg bg-synth"></div>
           <div class="c-card__rating">8.7 ★</div>
           <div class="c-card__check">✓</div>
           <div class="c-card__info"><div class="c-card__name">Synthwave</div><div class="c-card__tag">Retro · 80s</div></div>
         </div>
-        <div class="c-card" data-style="pixar" onclick="selectCard(4)">
+        <div class="c-card c-card--arrastrable" data-style="pixar" data-ejemplo-img="assets/img/estilos/pixar-ejemplo.jpg" onclick="selectCard(4)">
           <div class="c-card__bg bg-pixar"></div>
           <div class="c-card__rating">9.0 ★</div>
           <div class="c-card__check">✓</div>
@@ -447,6 +447,9 @@
         <button class="quick-actions__btn" id="btnMejorar" type="button" onclick="quickAction('enhance-image', this)">
           <span class="qa-spinner"></span><span class="qa-label">✨ Mejorar calidad</span>
         </button>
+        <button class="quick-actions__btn" id="btnCopiarEstiloRapido" type="button" onclick="copiarEstiloRapido(this)">
+          <span class="qa-spinner"></span><span class="qa-label">🎨 Copiar estilo</span>
+        </button>
         <div class="download-wrap" id="downloadWrap">
           <button class="quick-actions__btn qa-download" type="button" onclick="toggleDownloadMenu(event)">
             <span class="qa-label">⬇️ Descargar</span>
@@ -461,7 +464,7 @@
     </div>
 
     <div class="ref-section" id="refSection">
-      <p class="upload-section-label"><span class="step-num">③</span> O sube tu propia foto de referencia (opcional)</p>
+      <p class="upload-section-label"><span class="step-num">③</span> O sube tu propia foto de referencia (opcional, para un estilo custom)</p>
       <div class="ref-upload-zona" id="refZona"
         ondragover="onRefDragOver(event)" ondragleave="onRefDragLeave(event)"
         ondrop="onRefDrop(event)" onclick="triggerRefInput()">
@@ -501,7 +504,7 @@
       <span id="btnIco">✨</span>
       <span id="btnTxt">Primero sube tu foto</span>
     </button>
-    <p class="credits-hint" id="creditsHint">✂️ Quitar fondo y ✨ mejorar calidad son gratis · Transformar con estilo IA cuesta <strong>15 créditos</strong></p>
+    <p class="credits-hint" id="creditsHint">✂️ Quitar fondo, ✨ mejorar calidad y 🎨 copiar estilo son gratis · Transformar con estilo IA cuesta <strong>15 créditos</strong></p>
 
     <div class="resultado-ia" id="resultadoIA">
       <div class="resultado-ia__title" id="resultadoIATitle">Generando tu transformación…</div>
@@ -754,7 +757,7 @@ function resetAuto() {
 }
 
 /* Arrastre del carrusel: izquierda/derecha sigue el dedo con libertad (rubber-band),
-   y hacia abajo sobre una tarjeta arrastrable (Anime, Ghibli) la usa como foto de
+   y hacia abajo sobre una tarjeta arrastrable (Anime, Cyberpunk, Ghibli, Synthwave, Pixar) la usa como foto de
    referencia para "Copiar estilo gratis", sin interrumpir el auto-rotado. */
 function dragStart(e) {
   const startX = (e.touches ? e.touches[0].clientX : e.clientX);
@@ -854,6 +857,17 @@ let refImgB64 = null;
 let fotoProcesada = false;
 
 const STYLE_NAMES = { anime:'Anime', cyberpunk:'Cyberpunk', ghibli:'Ghibli', synthwave:'Synthwave', pixar:'Pixar 3D' };
+
+// Imagen de ejemplo por defecto para cada estilo del carrusel — usada por el
+// botón rápido "🎨 Copiar estilo" (1 clic, sin pedir foto de referencia).
+const DEFAULT_REF_IMAGES = {
+  anime:     'assets/img/estilos/anime-ejemplo.jpg',
+  cyberpunk: 'assets/img/estilos/cyberpunk-ejemplo.jpg',
+  ghibli:    'assets/img/estilos/ghibli-ejemplo.jpg',
+  synthwave: 'assets/img/estilos/synthwave-ejemplo.jpg',
+  pixar:     'assets/img/estilos/pixar-ejemplo.jpg',
+};
+
 function actualizarStyleHint() {
   const el = document.getElementById('styleNameHint');
   if (el) el.textContent = STYLE_NAMES[STYLES[current]] || STYLES[current];
@@ -972,7 +986,7 @@ function clearRefImg(e) {
   actualizarBotonLibre();
 }
 
-/* ── Arrastrar una tarjeta del carrusel (Anime/Ghibli) hacia abajo
+/* ── Arrastrar una tarjeta del carrusel hacia abajo
    para usarla directamente como foto de referencia, sin subir nada ── */
 async function usarEjemploComoReferencia(cardEl) {
   const ruta = cardEl.dataset.ejemploImg;
@@ -996,7 +1010,75 @@ async function usarEjemploComoReferencia(cardEl) {
   }
 }
 
-/* ══ Copiar estilo gratis (Gemini) — sin escribir ningún prompt ══ */
+/* ══ Copiar estilo GRATIS (Gemini) — botón rápido, 1 clic, usa el ejemplo
+   del estilo activo en el carrusel como referencia automáticamente ══ */
+async function copiarEstiloRapido(btn) {
+  if (!imgB64) return;
+
+  const usuario = (window.pixeoUser && window.pixeoUser()) || null;
+  if (!usuario) {
+    if (window.abrirModalLogin) window.abrirModalLogin();
+    else alert('Inicia sesión para continuar.');
+    return;
+  }
+
+  const styleActual = STYLES[current];
+  const rutaRef = DEFAULT_REF_IMAGES[styleActual];
+  if (!rutaRef) {
+    alert(`Aún no hay imagen de referencia para el estilo ${STYLE_NAMES[styleActual] || styleActual}. Prueba con otro estilo.`);
+    return;
+  }
+
+  btn.classList.add('qa-loading');
+  btn.disabled = true;
+
+  resultadoLibre.classList.add('show');
+  resultadoLibreTitle.textContent = 'Copiando el estilo…';
+  resultadoLibreStatus.style.display = 'block';
+  resultadoLibreStatus.textContent = `Aplicando el estilo ${STYLE_NAMES[styleActual] || styleActual}…`;
+  resultadoLibreError.style.display = 'none';
+  resultadoLibreGrid.innerHTML = '';
+  resultadoLibreSpinnerWrap.style.display = 'block';
+  resultadoLibre.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  try {
+    const refResp = await fetch(rutaRef);
+    if (!refResp.ok) throw new Error('No se encontró la imagen de referencia por defecto');
+    const refB64 = await blobToB64(await refResp.blob());
+
+    const idToken = await usuario.getIdToken();
+    const resp = await fetch('/.netlify/functions/estilo-libre', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken, imagenBase: imgB64, imagenReferencia: refB64 }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'No se pudo copiar el estilo.');
+
+    resultadoLibreSpinnerWrap.style.display = 'none';
+    resultadoLibreStatus.style.display = 'none';
+    resultadoLibreTitle.textContent = '¡Listo! Elige tu favorita ✨';
+    (data.imagenes || []).forEach((url, i) => {
+      const item = document.createElement('div');
+      item.className = 'resultado-libre__item';
+      item.innerHTML = `<img src="${url}" alt="Variación ${i+1}"><a href="${url}" download="pixeo-estilo-libre-${i+1}.png">⬇️</a>`;
+      resultadoLibreGrid.appendChild(item);
+    });
+    if (typeof data.restantes === 'number') {
+      document.getElementById('libreRestantesTxt').textContent = data.restantes;
+    }
+  } catch (err) {
+    resultadoLibreSpinnerWrap.style.display = 'none';
+    resultadoLibreStatus.style.display = 'none';
+    resultadoLibreError.style.display = 'block';
+    resultadoLibreError.textContent = err.message || 'Error de conexión. Intenta de nuevo.';
+  } finally {
+    btn.classList.remove('qa-loading');
+    btn.disabled = false;
+  }
+}
+
+/* ══ Copiar estilo gratis (Gemini) — flujo avanzado: foto de referencia propia ══ */
 const btnLibre     = document.getElementById('btnEstiloLibre');
 const btnLibreTxt  = document.getElementById('btnEstiloLibreTxt');
 const spinnerLibre = document.getElementById('spinnerLibre');
@@ -1016,7 +1098,7 @@ function actualizarBotonLibre() {
     btnLibreTxt.textContent = '🎨 Ahora sube tu foto (paso ②) para copiar este estilo (gratis)';
   } else if (imgB64 && !refImgB64) {
     btnLibre.disabled = true;
-    btnLibreTxt.textContent = '🎨 Sube una foto de referencia arriba, o arrastra Anime/Ghibli hacia abajo (gratis)';
+    btnLibreTxt.textContent = '🎨 Sube una foto de referencia arriba, o arrastra una tarjeta hacia abajo (gratis)';
   } else {
     btnLibre.disabled = true;
     btnLibreTxt.textContent = '🎨 Sube tu foto y una foto de referencia arriba para copiar su estilo (gratis)';
