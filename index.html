@@ -1027,6 +1027,23 @@ async function usarEjemploComoReferencia(cardEl) {
 
 /* ══ Copiar estilo GRATIS (Gemini) — botón rápido, 1 clic, usa el ejemplo
    del estilo activo en el carrusel como referencia automáticamente ══ */
+// ══ Pregunta cada 2s el estado de un job de "copiar estilo" hasta que
+//    esté listo, falle, o pasen 90s (por si algo quedó atascado). ══
+async function esperarResultadoEstiloLibre(jobId) {
+  const LIMITE_MS = 90000;
+  const inicio = Date.now();
+  while (Date.now() - inicio < LIMITE_MS) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const resp = await fetch(`/.netlify/functions/estilo-libre-estado?jobId=${encodeURIComponent(jobId)}`);
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'No se pudo consultar el estado.');
+    if (data.status === 'listo') return data.imagenes || [];
+    if (data.status === 'error') throw new Error(data.error || 'La generación falló.');
+    // si sigue "procesando", el while sigue preguntando
+  }
+  throw new Error('Está tardando más de lo normal. Intenta de nuevo en un momento.');
+}
+
 async function copiarEstiloRapido(btn) {
   if (!imgB64) return;
 
@@ -1064,18 +1081,21 @@ async function copiarEstiloRapido(btn) {
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || 'No se pudo copiar el estilo.');
 
+    if (typeof data.restantes === 'number') {
+      document.getElementById('libreRestantesTxt').textContent = data.restantes;
+    }
+
+    const imagenes = await esperarResultadoEstiloLibre(data.jobId);
+
     resultadoLibreSpinnerWrap.style.display = 'none';
     resultadoLibreStatus.style.display = 'none';
     resultadoLibreTitle.textContent = '¡Listo! Elige tu favorita ✨';
-    (data.imagenes || []).forEach((url, i) => {
+    imagenes.forEach((url, i) => {
       const item = document.createElement('div');
       item.className = 'resultado-libre__item';
       item.innerHTML = `<img src="${url}" alt="Variación ${i+1}"><a href="${url}" download="pixeo-estilo-libre-${i+1}.png">⬇️</a>`;
       resultadoLibreGrid.appendChild(item);
     });
-    if (typeof data.restantes === 'number') {
-      document.getElementById('libreRestantesTxt').textContent = data.restantes;
-    }
   } catch (err) {
     resultadoLibreSpinnerWrap.style.display = 'none';
     resultadoLibreStatus.style.display = 'none';
@@ -1143,18 +1163,21 @@ async function copiarEstiloGratis() {
       throw new Error(data.error || 'No se pudo copiar el estilo.');
     }
 
+    if (typeof data.restantes === 'number') {
+      document.getElementById('libreRestantesTxt').textContent = data.restantes;
+    }
+
+    const imagenes = await esperarResultadoEstiloLibre(data.jobId);
+
     resultadoLibreSpinnerWrap.style.display = 'none';
     resultadoLibreStatus.style.display = 'none';
     resultadoLibreTitle.textContent = '¡Listo! Elige tu favorita ✨';
-    (data.imagenes || []).forEach((url, i) => {
+    imagenes.forEach((url, i) => {
       const item = document.createElement('div');
       item.className = 'resultado-libre__item';
       item.innerHTML = `<img src="${url}" alt="Variación ${i+1}"><a href="${url}" download="pixeo-estilo-libre-${i+1}.png">⬇️</a>`;
       resultadoLibreGrid.appendChild(item);
     });
-    if (typeof data.restantes === 'number') {
-      document.getElementById('libreRestantesTxt').textContent = data.restantes;
-    }
   } catch (err) {
     resultadoLibreSpinnerWrap.style.display = 'none';
     resultadoLibreStatus.style.display = 'none';
