@@ -4,11 +4,12 @@
 //  que ya usa tu app, con permisos de administrador (puede
 //  escribir sin pasar por las reglas).
 //
-//  Necesita 3 variables de entorno (en vez del JSON completo,
+//  Necesita 4 variables de entorno (en vez del JSON completo,
 //  para no pasar el límite de 4KB de AWS Lambda):
 //    - FIREBASE_PROJECT_ID
 //    - FIREBASE_CLIENT_EMAIL
 //    - FIREBASE_PRIVATE_KEY
+//    - FIREBASE_DATABASE_URL
 //  (ver LEEME.md)
 // ============================================================
 
@@ -41,11 +42,15 @@ let app;
 export function getFirebaseAdmin() {
   if (!getApps().length) {
     const serviceAccount = credencialesDesdeEnv();
+    const databaseURL = process.env.FIREBASE_DATABASE_URL;
+
+    if (!databaseURL) {
+      throw new Error("Falta la variable de entorno FIREBASE_DATABASE_URL");
+    }
+
     app = initializeApp({
       credential: cert(serviceAccount),
-      databaseURL:
-        process.env.FIREBASE_DATABASE_URL ||
-        "https://pixeo-6c0a3-default-rtdb.firebaseio.com",
+      databaseURL,
     });
   }
   return { db: getDatabase(app), auth: getAuth(app) };
