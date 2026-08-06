@@ -126,6 +126,18 @@
 
     /* BUTTON */
     .btn-transf { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--orange); color: #fff; width: 100%; padding: 16px 24px; border-radius: 14px; font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 8px 30px var(--orange-dim); transition: transform .18s, box-shadow .18s, opacity .18s; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,6,14,.72); backdrop-filter: blur(4px); z-index: 999; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #161a2e; border: 1px solid var(--border); border-radius: 18px; padding: 26px 22px; max-width: 360px; width: 100%; text-align: center; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .modal-box__ico { font-size: 2rem; }
+    .modal-box__title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem; }
+    .modal-box__desc { color: var(--muted); font-size: .88rem; line-height: 1.4; margin: 0; }
+    .modal-box .btn-transf { padding: 13px 18px; font-size: .88rem; }
+    .modal-box__cancel { background: none; border: none; color: var(--muted); font-size: .85rem; cursor: pointer; padding: 6px; }
+    .modal-confirmar__previews { display: flex; gap: 10px; justify-content: center; margin: 4px 0; }
+    .modal-confirmar__preview { flex: 1; max-width: 130px; }
+    .modal-confirmar__preview img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); }
+    .modal-confirmar__preview span { display: block; font-size: .72rem; color: var(--muted); margin-top: 5px; }
     .btn-transf:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 42px rgba(255,107,53,.55); }
     .btn-transf:active:not(:disabled) { transform: scale(.98); }
     .btn-transf:disabled { opacity: .35; cursor: default; }
@@ -684,6 +696,26 @@
   </div>
 </footer>
 
+<div class="modal-overlay" id="modalConfirmarEstilo">
+  <div class="modal-box">
+    <div class="modal-box__ico">🎨</div>
+    <div class="modal-box__title">¿Copiamos este estilo?</div>
+    <p class="modal-box__desc" id="modalConfirmarEstiloDesc">Se va a generar tu foto con este estilo. Usa 1 de tus copias gratis del día.</p>
+    <div class="modal-confirmar__previews" id="modalConfirmarEstiloPreviews">
+      <div class="modal-confirmar__preview">
+        <img id="modalConfirmarEstiloImgBase" src="" alt="Tu foto">
+        <span>Tu foto</span>
+      </div>
+      <div class="modal-confirmar__preview">
+        <img id="modalConfirmarEstiloImgRef" src="" alt="Estilo">
+        <span>Estilo</span>
+      </div>
+    </div>
+    <button class="btn-transf btn-libre" type="button" id="modalConfirmarEstiloBtn">✅ Sí, generar</button>
+    <button class="modal-box__cancel" type="button" onclick="cerrarModalConfirmarEstilo()">Cancelar</button>
+  </div>
+</div>
+
 <script src="assets/js/config-sitio.js" onerror="void 0"></script>
 <script src="assets/js/main.js" onerror="void 0"></script>
 <script type="module" src="assets/js/firebase-auth.js" onerror="void 0"></script>
@@ -1044,10 +1076,29 @@ async function esperarResultadoEstiloLibre(jobId) {
   throw new Error('Está tardando más de lo normal. Intenta de nuevo en un momento.');
 }
 
+/* ══ Modal de confirmación antes de gastar una copia gratis ══ */
+const modalConfirmarEstilo = document.getElementById('modalConfirmarEstilo');
+const modalConfirmarEstiloDesc = document.getElementById('modalConfirmarEstiloDesc');
+const modalConfirmarEstiloImgBase = document.getElementById('modalConfirmarEstiloImgBase');
+const modalConfirmarEstiloImgRef = document.getElementById('modalConfirmarEstiloImgRef');
+const modalConfirmarEstiloBtn = document.getElementById('modalConfirmarEstiloBtn');
+
+function abrirModalConfirmarEstilo({ imgBaseSrc, imgRefSrc, desc, onConfirmar }) {
+  modalConfirmarEstiloImgBase.src = imgBaseSrc || '';
+  modalConfirmarEstiloImgRef.src = imgRefSrc || '';
+  modalConfirmarEstiloDesc.textContent = desc;
+  modalConfirmarEstiloBtn.onclick = () => {
+    cerrarModalConfirmarEstilo();
+    onConfirmar();
+  };
+  modalConfirmarEstilo.classList.add('show');
+}
+function cerrarModalConfirmarEstilo() {
+  modalConfirmarEstilo.classList.remove('show');
+}
+
 async function copiarEstiloRapido(btn) {
   if (!imgB64) return;
-
-  const deviceId = getPixeoDeviceId();
 
   const styleActual = STYLES[current];
   const rutaRef = DEFAULT_REF_IMAGES[styleActual];
@@ -1055,6 +1106,17 @@ async function copiarEstiloRapido(btn) {
     alert(`Aún no hay imagen de referencia para el estilo ${STYLE_NAMES[styleActual] || styleActual}. Prueba con otro estilo.`);
     return;
   }
+
+  abrirModalConfirmarEstilo({
+    imgBaseSrc: imgB64,
+    imgRefSrc: rutaRef,
+    desc: `Se va a copiar el estilo ${STYLE_NAMES[styleActual] || styleActual} en tu foto. Usa 1 de tus copias gratis del día.`,
+    onConfirmar: () => ejecutarCopiarEstiloRapido(btn, styleActual, rutaRef),
+  });
+}
+
+async function ejecutarCopiarEstiloRapido(btn, styleActual, rutaRef) {
+  const deviceId = getPixeoDeviceId();
 
   btn.classList.add('qa-loading');
   btn.disabled = true;
@@ -1137,6 +1199,15 @@ function actualizarBotonLibre() {
 async function copiarEstiloGratis() {
   if (!imgB64 || !refImgB64) return;
 
+  abrirModalConfirmarEstilo({
+    imgBaseSrc: imgB64,
+    imgRefSrc: refImgB64,
+    desc: 'Se va a copiar el estilo de tu foto de referencia. Usa 1 de tus copias gratis del día.',
+    onConfirmar: ejecutarCopiarEstiloGratis,
+  });
+}
+
+async function ejecutarCopiarEstiloGratis() {
   const deviceId = getPixeoDeviceId();
 
   btnLibre.disabled = true;
